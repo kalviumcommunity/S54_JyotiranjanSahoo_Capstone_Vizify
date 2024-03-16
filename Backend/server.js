@@ -10,7 +10,7 @@ app.use(cors())
 
 
 app.route('/').get((req,res)=>{
-    res.send("Hello")
+    res.send("This is Main Backend Route")
 })
 
 
