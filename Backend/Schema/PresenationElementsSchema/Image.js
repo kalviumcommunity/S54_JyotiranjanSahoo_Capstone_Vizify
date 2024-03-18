@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const ImageSchema = new mongoose.Schema({
-    path: {type: String,required: true},
+    path: {type: String,required: true,match: [/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, 'Please enter a valid URL']},
     altText: String,
     flipH: Boolean,
     flipV: Boolean,

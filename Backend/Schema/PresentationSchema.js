@@ -14,6 +14,8 @@ const SlideSchema = new mongoose.Schema({
 const PresentationSchema = new mongoose.Schema({
   slides: [SlideSchema],
   createdBy: String
+},{
+  timestamps: true
 });
 
 const PresentationModel = mongoose.model("presentations", PresentationSchema);
