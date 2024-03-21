@@ -67,9 +67,10 @@ const Navbar = () => {
               _expanded={{ color: "#ffffffe6" }}
               as={Button}
               _focus={{ boxShadow: "none" }}
-              onMouseEnter={onOpen}
               onClick={isOpen ? onClose : onOpen}
               // onBlur={onClose}
+              // onFocus={onOpen}
+              onMouseEnter={onOpen}
               onMouseLeave={onClose}
               _hover={{
                 filter: "drop-shadow(0 0 0.2vw #ffffff90)",
