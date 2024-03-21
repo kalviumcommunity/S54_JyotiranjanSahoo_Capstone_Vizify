@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "Astro Futuristic Font Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Astro Futuristic Font Regular"), url("./../../assets/Fonts/as.woff"), format("woff");
+}
+
+.heading{
+    /* font-family: Astro Futuristic Font Regular; */
+    font-size: 30vw;
+    color: white;
+}
