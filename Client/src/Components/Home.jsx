@@ -16,7 +16,7 @@ const Home = () => {
           <Heading
             fontFamily={"Astro Futuristic Font Regular"}
             color={"white"}
-            fontSize={["6rem", "8rem"]}
+            fontSize={["5rem", "8rem"]}
             fontWeight={"100"}
             letterSpacing={"0.5vw"}
             textShadow={"0 1vw 0.5vw #10223080"}
@@ -29,7 +29,7 @@ const Home = () => {
             fontFamily={"Astro Futuristic Font Regular"}
             color={"white"}
             textAlign={"center"}
-            fontSize={["1rem","1.5rem"]}
+            fontSize={["0.9rem","1.5rem"]}
             cursor={"default"}
           >
             Transforming Text to Visual Brilliance
