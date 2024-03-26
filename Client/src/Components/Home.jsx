@@ -1,11 +1,13 @@
 import React from "react";
-import { Box, Button, Center, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Heading, Img, Text } from "@chakra-ui/react";
 
-import HomeBG from "../assets/Home_bg.jpeg";
+import HomeBG from "./../assets/Home_bg.jpeg";
+import AIGenImg from "./../assets/AI_Section.png"
+import "./font.css"
 
 const Home = () => {
   return (
-    <Box>
+    <Box w={'100vw'}>
       <Center
         bgSize={"cover"}
         w={"100%"}
@@ -53,6 +55,15 @@ const Home = () => {
           </Button>
         </Flex>
       </Center>
+
+
+
+      {/* <Flex w={'95vw'} m={'0 auto'} justify={'space-between'}>
+        <Flex direction={'column'} w={"45%"}>
+          <Heading background={"-webkit-linear-gradient(113deg, rgba(0,178,255,1) 7%, rgba(7,216,239,1) 80%)"} backgroundClip={'text'} size={'4xl'}>AI Based<br/>Generation</Heading>
+        </Flex>
+        <Img  src={AIGenImg} boxSize={"45%"} objectFit={"cover"}/>
+      </Flex> */}
     </Box>
   );
 };

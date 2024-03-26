@@ -12,6 +12,7 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
+import {Link, useNavigate} from "react-router-dom"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { CgProfile } from "react-icons/cg";
 import React from "react";
@@ -19,13 +20,14 @@ import Logo from "./../assets/Vizify_Logo.png";
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate(null)
   return (
-    <Center display={["none", "flex"]}>
+    <Center>
       <Flex
         backdropFilter={"auto"}
         backdropBlur={"5px"}
         pos={"fixed"}
-        w={"98vw"}
+        w={"95vw"}
         h={[null, "5vw", null, "4.4vw"]}
         bgColor={"#102230e6"}
         top={"1vw"}
@@ -34,6 +36,7 @@ const Navbar = () => {
         px={"3vw"}
         border={"3px solid #10223060"}
         filter={"drop-shadow(0 0.5vw 0.3vw #00000040 )"}
+        zIndex={"1"}
       >
         <Box w={"33%"} _hover={{
                 filter: "drop-shadow(0 0 0.5vw #01EAF980)",
@@ -52,7 +55,7 @@ const Navbar = () => {
             }}
             transition={"all 0.2s"}
           >
-            Home
+            <Link to={"/"}>Home</Link>
           </Button>
           <Center>
             <Divider orientation="vertical" opacity={"0.1"} h={"2.2vw"} />
@@ -62,14 +65,11 @@ const Navbar = () => {
               variant={"link"}
               fontSize={"1.3vw"}
               h={[null, "5vw", null, "4.4vw"]}
-              // rightIcon={isOpen?<ChevronDownIcon boxSize={6}/>:<ChevronDownIcon boxSize={6} />}
               color={"white"}
               _expanded={{ color: "#ffffffe6" }}
               as={Button}
               _focus={{ boxShadow: "none" }}
               onClick={isOpen ? onClose : onOpen}
-              // onBlur={onClose}
-              // onFocus={onOpen}
               onMouseEnter={onOpen}
               onMouseLeave={onClose}
               _hover={{
@@ -83,7 +83,6 @@ const Navbar = () => {
               ) : (
                 <ChevronDownIcon boxSize={[null, 3, 4, 5, 6, 7]} />
               )}
-              {/* <ChevronDownIcon boxSize={[null,3,4,5,6,7]} /> */}
             </MenuButton>
             <MenuList
               m={"-0.51vw"}
@@ -102,6 +101,9 @@ const Navbar = () => {
                 }}
                 fontSize={[null, "1.3vw", null, "1vw"]}
                 color={"white"}
+                onClick={()=>{
+                  navigate("/texttoppt")
+                }}
               >
                 Text To Presentation
               </MenuItem>
@@ -114,6 +116,9 @@ const Navbar = () => {
                 }}
                 fontSize={[null, "1.3vw", null, "1vw"]}
                 color={"white"}
+                onClick={()=>{
+                  navigate("/texttoimg")
+                }}
               >
                 Text To Image
               </MenuItem>
@@ -132,7 +137,7 @@ const Navbar = () => {
             }}
             transition={"all 0.2s"}
           >
-            About
+            <Link to={"/about"}>About</Link>
           </Button>
         </Flex>
         <Flex w={"33%"} justify={"end"}>
