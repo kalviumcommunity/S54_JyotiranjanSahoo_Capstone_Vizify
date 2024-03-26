@@ -46,12 +46,8 @@ const NavDrawer = () => {
           <DrawerBody mt={"5vw"}>
             <VStack align={"start"}>
               <Button
-              // borderTop={"1px solid white"}
-              // pt={'2vw'}
-              // borderRadius={"none"}
                 variant={"link"}
                 fontSize={"5vw"}
-                // textAlign={}
                 color={"white"}
                 h={[null, "5vw", null, "4.4vw"]}
                 _hover={{
@@ -61,7 +57,6 @@ const NavDrawer = () => {
               >
                 <Link to={"/"}>Home</Link>
               </Button>
-              {/* <Divider opacity={"0.1"} h={"2.2vw"} /> */}
               <NavAccordion />
               <Button
                 variant={"link"}

@@ -6,7 +6,7 @@ import NavDrawer from "./NavDrawer";
 
 const NavBar_Responsive = () => {
   return (
-    <Center display={["flex", "none"]}>
+    <Center>
       <Flex
         backdropFilter={"auto"}
         backdropBlur={"5px"}

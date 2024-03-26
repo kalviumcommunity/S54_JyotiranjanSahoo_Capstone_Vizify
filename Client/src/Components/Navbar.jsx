@@ -22,7 +22,7 @@ const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null)
   return (
-    <Center display={["none", "flex"]}>
+    <Center>
       <Flex
         backdropFilter={"auto"}
         backdropBlur={"5px"}
@@ -65,14 +65,11 @@ const Navbar = () => {
               variant={"link"}
               fontSize={"1.3vw"}
               h={[null, "5vw", null, "4.4vw"]}
-              // rightIcon={isOpen?<ChevronDownIcon boxSize={6}/>:<ChevronDownIcon boxSize={6} />}
               color={"white"}
               _expanded={{ color: "#ffffffe6" }}
               as={Button}
               _focus={{ boxShadow: "none" }}
               onClick={isOpen ? onClose : onOpen}
-              // onBlur={onClose}
-              // onFocus={onOpen}
               onMouseEnter={onOpen}
               onMouseLeave={onClose}
               _hover={{
@@ -86,7 +83,6 @@ const Navbar = () => {
               ) : (
                 <ChevronDownIcon boxSize={[null, 3, 4, 5, 6, 7]} />
               )}
-              {/* <ChevronDownIcon boxSize={[null,3,4,5,6,7]} /> */}
             </MenuButton>
             <MenuList
               m={"-0.51vw"}
