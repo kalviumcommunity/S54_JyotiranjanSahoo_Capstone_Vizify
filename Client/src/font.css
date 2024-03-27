@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "Astro Futuristic Font Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Astro Futuristic Font Regular"),
+    url("./assets/Fonts/as.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Future Now Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Future Now Regular'), url('./assets/Fonts/FutureNow.woff') format('woff');
+  }
+
+.astro {
+  font-family: "Astro Futuristic Font Regular";
+}
+.futuristic {
+  font-family: 'Future Now Regular';
+}

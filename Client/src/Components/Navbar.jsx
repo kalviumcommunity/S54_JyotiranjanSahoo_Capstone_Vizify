@@ -15,12 +15,14 @@ import {
 import {Link, useNavigate} from "react-router-dom"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { CgProfile } from "react-icons/cg";
-import React from "react";
+import React, { useContext } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
+import { context } from "./Context/AppContext";
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null)
+  const {footerRef} = useContext(context)
   return (
     <Center>
       <Flex
@@ -136,8 +138,13 @@ const Navbar = () => {
               filter: "drop-shadow(0 0 0.2vw #ffffff90)",
             }}
             transition={"all 0.2s"}
+            onClick={()=>{
+              if(footerRef.current){
+                footerRef.current.scrollIntoView({behavior: "smooth"})
+              }
+            }}
           >
-            <Link to={"/about"}>About</Link>
+            Contact Us
           </Button>
         </Flex>
         <Flex w={"33%"} justify={"end"}>

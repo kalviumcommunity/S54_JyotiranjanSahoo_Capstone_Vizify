@@ -21,6 +21,7 @@ const NavBar_Responsive = () => {
         px={"5vw"}
         border={"3px solid #10223060"}
         filter={"drop-shadow(0 0.5vw 0.3vw #00000040 )"}
+        zIndex={"1"}
       >
         <Box w={"33%"} _hover={{
                 filter: "drop-shadow(0 0 0.5vw #01EAF980)",

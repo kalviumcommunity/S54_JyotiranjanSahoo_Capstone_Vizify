@@ -15,15 +15,17 @@ import {
   AccordionItem,
   AccordionButton,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Logo from "./../../assets/Vizify_Logo.png";
 import { Link } from "react-router-dom";
 import NavAccordion from "./NavAccordion";
+import { context } from "../Context/AppContext";
 
 const NavDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
+  const {footerRef} = useContext(context)
 
   return (
     <>
@@ -67,8 +69,14 @@ const NavDrawer = () => {
                   filter: "drop-shadow(0 0 0.2vw #ffffff90)",
                 }}
                 transition={"all 0.2s"}
+                onClick={()=>{
+                  if(footerRef.current){
+                    footerRef.current.scrollIntoView({behavior: "smooth"})
+                  }
+                  onClose()
+                }}
               >
-                <Link to={"/about"}>About</Link>
+                Contact Us
               </Button>
             </VStack>
           </DrawerBody>

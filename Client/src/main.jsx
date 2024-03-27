@@ -8,7 +8,9 @@ import AppContext from "./Components/Context/AppContext.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ChakraProvider>
     <BrowserRouter>
-      <AppContext><App /></AppContext>
+      <AppContext>
+        <App />
+      </AppContext>
     </BrowserRouter>
   </ChakraProvider>
 );
