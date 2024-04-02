@@ -22,10 +22,12 @@ const NavAccordion = () => {
         <AccordionButton
           color={"white"}
           fontSize={"5vw"}
-          fontWeight={"bold"}
+          fontWeight={"semibold"}
           px={"0"}
+          variant="link"
+          h={"10vw"}
         >
-          <Box as={"span"}>Explore</Box>
+          Explore
           <AccordionIcon mt={"1vw"} mx={"2vw"} />
         </AccordionButton>
         <AccordionPanel>

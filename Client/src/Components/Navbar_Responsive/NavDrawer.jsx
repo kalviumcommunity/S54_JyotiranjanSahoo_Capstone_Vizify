@@ -25,7 +25,7 @@ import { context } from "../Context/AppContext";
 const NavDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
-  const {footerRef} = useContext(context)
+  const {footerRef,isLoggedIn} = useContext(context)
 
   return (
     <>
@@ -51,7 +51,7 @@ const NavDrawer = () => {
                 variant={"link"}
                 fontSize={"5vw"}
                 color={"white"}
-                h={[null, "5vw", null, "4.4vw"]}
+                h={"10vw"}
                 _hover={{
                   filter: "drop-shadow(0 0 0.2vw #ffffff90)",
                 }}
@@ -64,20 +64,46 @@ const NavDrawer = () => {
                 variant={"link"}
                 fontSize={"5vw"}
                 color={"white"}
-                h={[null, "5vw", null, "4.4vw"]}
+                h={"10vw"}
                 _hover={{
                   filter: "drop-shadow(0 0 0.2vw #ffffff90)",
                 }}
                 transition={"all 0.2s"}
-                onClick={()=>{
-                  if(footerRef.current){
-                    footerRef.current.scrollIntoView({behavior: "smooth"})
+                onClick={() => {
+                  if (footerRef.current) {
+                    const y = footerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+                    window.scrollTo({ top: y, behavior: "smooth" });
                   }
                   onClose()
                 }}
               >
                 Contact Us
               </Button>
+              {isLoggedIn?<Button
+                variant={"link"}
+                fontSize={"5vw"}
+                color={"white"}
+                h={"10vw"}
+                _hover={{
+                  filter: "drop-shadow(0 0 0.2vw #ffffff90)",
+                }}
+                transition={"all 0.2s"}
+              >
+                Profile
+              </Button>:<Button
+                variant={"link"}
+                fontSize={"5vw"}
+                color={"white"}
+                h={"10vw"}
+                _hover={{
+                  filter: "drop-shadow(0 0 0.2vw #ffffff90)",
+                }}
+                transition={"all 0.2s"}
+
+              >
+                Login
+              </Button>}
+
             </VStack>
           </DrawerBody>
         </DrawerContent>
