@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import TextToPPT from "./../assets/textToPPTHomeImg.png";
 import "./../font.css";
 
 const Home = () => {
+  const exploreRef = useRef(null);
   return (
     <Box w={"100%"}>
       {/* Landing Div  */}
@@ -66,6 +67,13 @@ const Home = () => {
               shadow: "0 0 0.7vw #10223080",
               transform: "scale(1.01)",
               transition: "transform 0.3s",
+            }}
+            onClick={() => {
+              if (exploreRef.current) {
+                const y =
+                  exploreRef.current.getBoundingClientRect().top + window.pageYOffset - 100
+                window.scrollTo({ top: y, behavior: "smooth" });
+              }
             }}
           >
             Explore
@@ -151,6 +159,7 @@ const Home = () => {
             "-webkit-linear-gradient(113deg, rgba(0,178,255,1) 7%, rgba(7,216,239,1) 80%)"
           }
           backgroundClip={"text"}
+          ref={exploreRef}
           // mb={"3vw"}
         >
           FEATURES
