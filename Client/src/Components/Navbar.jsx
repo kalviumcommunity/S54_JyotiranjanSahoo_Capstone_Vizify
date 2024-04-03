@@ -4,14 +4,13 @@ import {
   Center,
   Divider,
   Flex,
-  Text,
-  Icon,
   Img,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   useDisclosure,
+  Spinner,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -21,13 +20,15 @@ import React, { useContext } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
 import { context } from "./Context/AppContext";
 import LoginButton from "./LoginButton";
-
+import { useAuth0 } from "@auth0/auth0-react";
+import ProfileMenu from "./ProfileMenu";
 
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
-  const { footerRef, isLoggedIn, setIsLoggedIn } = useContext(context);
+  const { footerRef } = useContext(context);
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   return (
     <Center>
       <Flex
@@ -159,24 +160,13 @@ const Navbar = () => {
             Contact Us
           </Button>
         </Flex>
-        <Flex w={"33%"} justify={"end"}>
-          {isLoggedIn ? (
-            <Button variant={"link"}>
-              <Icon
-                transition={"all 0.3s"}
-                _hover={{
-                  filter: "drop-shadow(0 0 0.3vw #ffffff90)",
-                  transform: "scale(1.05)",
-                }}
-                as={CgProfile}
-                boxSize={7}
-                color={"white"}
-              />
-            </Button>
+        {isLoading ? <Flex w={"33%"} justify="end"><Spinner color="white"/></Flex> :<Flex w={"33%"} justify={"end"}>
+          {isAuthenticated ? (
+            <ProfileMenu/>
           ) : (
             <LoginButton/>
           )}
-        </Flex>
+        </Flex>}
       </Flex>
     </Center>
   );

@@ -21,11 +21,14 @@ import Logo from "./../../assets/Vizify_Logo.png";
 import { Link } from "react-router-dom";
 import NavAccordion from "./NavAccordion";
 import { context } from "../Context/AppContext";
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const NavDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
-  const {footerRef,isLoggedIn} = useContext(context)
+  const { footerRef } = useContext(context)
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   return (
     <>
@@ -79,7 +82,7 @@ const NavDrawer = () => {
               >
                 Contact Us
               </Button>
-              {isLoggedIn?<Button
+              {isAuthenticated?<Button
                 variant={"link"}
                 fontSize={"5vw"}
                 color={"white"}
