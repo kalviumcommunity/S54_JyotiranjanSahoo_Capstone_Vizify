@@ -1,4 +1,4 @@
-import { Button, Collapse, Fade, Icon, useDisclosure } from "@chakra-ui/react";
+import { Button, Fade, Icon, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 import { TbLogin2 } from "react-icons/tb";
 import { useAuth0 } from "@auth0/auth0-react";
