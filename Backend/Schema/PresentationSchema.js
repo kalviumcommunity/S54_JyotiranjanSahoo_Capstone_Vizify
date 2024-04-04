@@ -7,6 +7,7 @@ const SlideElementSchema = require('./PresenationElementsSchema/SlideElementsSch
 const SlideSchema = new mongoose.Schema({
   background: {
     type: BackgroundSchema,
+      required: true
   },
   elements: [SlideElementSchema],
 });
