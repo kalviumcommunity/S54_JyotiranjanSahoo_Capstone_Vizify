@@ -18,8 +18,9 @@ import { useNavigate } from "react-router";
 const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, logout } = useAuth0();
-  const navigate = useNavigate()
 
+  const navigate = useNavigate();
+  console.log(user);
   return (
     <Menu isOpen={isOpen}>
       <MenuButton
@@ -33,7 +34,11 @@ const ProfileMenu = () => {
         onClick={isOpen ? onClose : onOpen}
         display={"flex"}
         justifyContent={"end"}
-        filter={`${isOpen?"drop-shadow(0 0 0.2vw #ffffff90)":"drop-shadow(0 0 0vw #ffffff00)"}`}
+        filter={`${
+          isOpen
+            ? "drop-shadow(0 0 0.2vw #ffffff90)"
+            : "drop-shadow(0 0 0vw #ffffff00)"
+        }`}
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
         transition={"all 0.4s"}
@@ -50,49 +55,49 @@ const ProfileMenu = () => {
           <Fade in={isOpen}>{user.name}</Fade>
         </Button>
       </MenuButton>
-          <MenuList
-            my={"-0.51vw"}
-            onMouseEnter={onOpen}
-            onMouseLeave={onClose}
-            bgColor={"#102230e6"}
-            border={"none"}
-            p={"0.5vw"}
-          >
-            <MenuItem
-              bgColor={"#10223000"}
-              borderRadius={"0.3vw"}
-              _hover={{
-                backgroundColor: "#ffffff10",
-                transition: "all 0.5s",
-              }}
-              fontSize={[null, "1.3vw", null, "1vw"]}
-              color={"white"}
-              onClick={() => {
-                navigate("/profile");
-              }}
-              fontWeight={"semibold"}
-            >
-              <Icon as={MdManageAccounts} boxSize={6} mr={"1vw"} />
-              Profile
-            </MenuItem>
-            <MenuItem
-              bgColor={"#10223000"}
-              borderRadius={"0.3vw"}
-              _hover={{
-                backgroundColor: "#ffffff10",
-                transition: "all 0.5s",
-              }}
-              fontSize={[null, "1.3vw", null, "1vw"]}
-              color={"#DA3633"}
-              fontWeight={"semibold"}
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
-            >
-              <Icon as={TbLogout2} boxSize={6} mr={"1vw"} />
-              LogOut
-            </MenuItem>
-          </MenuList>
+      <MenuList
+        my={"-0.51vw"}
+        onMouseEnter={onOpen}
+        onMouseLeave={onClose}
+        bgColor={"#102230e6"}
+        border={"none"}
+        p={"0.5vw"}
+      >
+        <MenuItem
+          bgColor={"#10223000"}
+          borderRadius={"0.3vw"}
+          _hover={{
+            backgroundColor: "#ffffff10",
+            transition: "all 0.5s",
+          }}
+          fontSize={[null, "1.3vw", null, "1vw"]}
+          color={"white"}
+          onClick={() => {
+            navigate("/profile");
+          }}
+          fontWeight={"semibold"}
+        >
+          <Icon as={MdManageAccounts} boxSize={6} mr={"1vw"} />
+          Profile
+        </MenuItem>
+        <MenuItem
+          bgColor={"#10223000"}
+          borderRadius={"0.3vw"}
+          _hover={{
+            backgroundColor: "#ffffff10",
+            transition: "all 0.5s",
+          }}
+          fontSize={[null, "1.3vw", null, "1vw"]}
+          color={"#DA3633"}
+          fontWeight={"semibold"}
+          onClick={() =>
+            logout({ logoutParams: { returnTo: window.location.origin } })
+          }
+        >
+          <Icon as={TbLogout2} boxSize={6} mr={"1vw"} />
+          LogOut
+        </MenuItem>
+      </MenuList>
     </Menu>
   );
 };
