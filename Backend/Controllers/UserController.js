@@ -1,7 +1,7 @@
 const UserValidationSchema = require("./../Validation/UserValidationSchema");
 const UserDataModel = require("./../Schema/UserDataSchema");
 const jwt = require("jsonwebtoken");
-const { sha512 } = require("js-sha512");
+const bcrypt = require("bcrypt")
 require("dotenv").config();
 
 const getAllUsers = async (req, res) => {
@@ -28,8 +28,7 @@ const getOneUser = async (req, res) => {
       res
         .status(200)
         .json({
-          User: User[0],
-          AccessToken: jwt.sign(User[0].Username, process.env.SECRET),
+          User: {...User[0],Username: jwt.sign(User[0].Username, process.env.SECRET)},
         });
     }
   } catch (error) {
@@ -47,33 +46,42 @@ const createUser = async (req, res) => {
       res.status(400).json({ error: error.details.map((e) => e.message) });
     } else {
       const { Name, Email, Password, Username } = value;
+      const hashedPassword = await bcrypt.hash(Password,10)
       const User = await UserDataModel.create({
         Name,
         Email,
-        Password: sha512(Password),
+        Password: hashedPassword,
         Presentations: [],
         Images: [],
         Username,
       });
+      const resData = {
+        Name,Email,Password: hashedPassword,Username: jwt.sign(Username,process.env.SECRET)
+      }
       res
         .status(201)
         .json({
           message: "User Created",
-          User,
-          AccessToken: jwt.sign(Username, process.env.SECRET),
+          User: resData,
         });
     }
   } catch (error) {
-    errorName = Object.keys(error.keyPattern);
-    errorValue = error.keyValue[errorName];
-    res
-      .status(400)
-      .json({
-        message: "Unable to Create User",
-        errorMessage: `"${errorValue}" ${errorName[0]} is already taken`,
-      });
-  }
+    if(error.keyPattern && error.keyValue){
+            errorName = Object.keys(error.keyPattern);
+            errorValue = error.keyValue[errorName];
+            res
+              .status(400)
+              .json({
+                message: "Unable to Create User",
+                errorMessage: `"${errorValue}" ${errorName[0]} is already taken`,
+              });
+          }else{
+            res.status(500).json({ message: "Unable to create User" });
+          }
+    }
 };
+
+
 
 const updateUser = async (req, res) => {
   try {
