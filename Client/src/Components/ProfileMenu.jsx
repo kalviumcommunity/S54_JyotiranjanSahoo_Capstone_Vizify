@@ -1,6 +1,7 @@
 import {
   Button,
   Fade,
+  Center,
   Icon,
   Menu,
   MenuButton,
@@ -8,27 +9,30 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { MdManageAccounts } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router";
+import { context } from "./Context/AppContext";
 
-const ProfileMenu = () => {
+const ProfileMenu = ({ userData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, logout } = useAuth0();
+  const { user, logout, isLoading } = useAuth0();
 
   const navigate = useNavigate();
-  console.log(user);
   return (
     <Menu isOpen={isOpen}>
       <MenuButton
-        variant={"link"}
+        variant={"ghost"}
+        bgColor={"transparent"}
+        _hover={{backgroundColor: "transparent"}}
         w={"15vw"}
+        px={"0"}
         h={[null, "5vw", null, "4.4vw"]}
         color={"white"}
-        _expanded={{ color: "#ffffffe6" }}
+        _expanded={{ color: "#ffffffe6", backgroundColor: "transparent"}}
         as={Button}
         _focus={{ boxShadow: "none" }}
         onClick={isOpen ? onClose : onOpen}
@@ -42,21 +46,29 @@ const ProfileMenu = () => {
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
         transition={"all 0.4s"}
+        leftIcon={
+          <Icon
+            as={CgProfile}
+            boxSize={7}
+            color={"white"}
+            transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
+            transition={"all 0.4s"}
+          />
+        }
       >
-        <Button
+        <Center
           transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
           transition={"all 0.4s"}
           variant={"link"}
           color={"white"}
           fontSize={"1.2vw"}
           h={[null, "5vw", null, "3vw"]}
-          leftIcon={<Icon as={CgProfile} boxSize={7} color={"white"} />}
         >
           <Fade in={isOpen}>{user.name}</Fade>
-        </Button>
+        </Center>
       </MenuButton>
       <MenuList
-        my={"-0.51vw"}
+        my={[null,"-1vw",null,"-0.51vw"]}
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
         bgColor={"#102230e6"}

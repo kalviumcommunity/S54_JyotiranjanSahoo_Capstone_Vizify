@@ -14,9 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { CgProfile } from "react-icons/cg";
-import { TbLogin2 } from "react-icons/tb";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
 import { context } from "./Context/AppContext";
 import LoginButton from "./LoginButton";
@@ -27,8 +25,8 @@ import ProfileMenu from "./ProfileMenu";
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
-  const { footerRef } = useContext(context);
-  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  const { footerRef,userData } = useContext(context);
+  const { user,isAuthenticated, isLoading } = useAuth0();
   return (
     <Center>
       <Flex
@@ -162,7 +160,7 @@ const Navbar = () => {
         </Flex>
         {isLoading ? <Flex w={"33%"} justify="end"><Spinner color="white"/></Flex> :<Flex w={"33%"} justify={"end"}>
           {isAuthenticated ? (
-            <ProfileMenu/>
+            <ProfileMenu userData={userData}/>
           ) : (
             <LoginButton/>
           )}
