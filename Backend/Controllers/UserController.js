@@ -19,20 +19,19 @@ const getAllUsers = async (req, res) => {
 
 const getOneUser = async (req, res) => {
   try {
-    const User = await UserDataModel.find({
-      Username: req.params.id,
-    }).exec();
+    const User = await UserDataModel.findById(req.params.id);
     if (User.length === 0) {
       res.status(404).json({ message: "User not found" });
     } else {
       res.status(200).json({
         User: {
-          ...User[0]._doc,
-          Username: jwt.sign(User[0].Username, process.env.SECRET),
+          ...User._doc,
+          Username: jwt.sign(User._doc.Username, process.env.SECRET),
         },
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Unable to fetch Data" });
   }
 };
@@ -46,12 +45,10 @@ const createUser = async (req, res) => {
     if (error) {
       res.status(400).json({ error: error.details.map((e) => e.message) });
     } else {
-      const { Name, Email, Password, Username } = value;
-      const hashedPassword = await bcrypt.hash(Password, 10);
+      const { Name, Email, Username } = value;
       const User = await UserDataModel.create({
         Name,
         Email,
-        Password: hashedPassword,
         Presentations: [],
         Images: [],
         Username,
@@ -59,7 +56,6 @@ const createUser = async (req, res) => {
       const resData = {
         Name,
         Email,
-        Password: hashedPassword,
         Presentations: [],
         Images: [],
         Username: jwt.sign(Username,process.env.SECRET)
