@@ -1,17 +1,12 @@
 const UserValidationSchema = require("./../Validation/UserValidationSchema");
 const UserDataModel = require("./../Schema/UserDataSchema");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const getAllUsers = async (req, res) => {
   try {
     const Users = await UserDataModel.find({});
-    if (Users.length === 0) {
-      res.status(404).json({ message: "Database is Empty" });
-    } else {
-      res.status(200).json(Users);
-    }
+    res.status(200).json(Users)
   } catch (error) {
     res.status(500).json({ message: "Unable to Fetch Data" });
   }
