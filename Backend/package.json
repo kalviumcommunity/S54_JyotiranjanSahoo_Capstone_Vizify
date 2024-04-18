@@ -2,12 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend for Vizify",
-  "main": "Backend/server.js",
+  "main": "Backend/index.js",
   "engines": {
     "node": "18.x"
   },
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon index.js"
   },
   "author": "S P Jyotiranjan Sahoo",
   "license": "ISC",
