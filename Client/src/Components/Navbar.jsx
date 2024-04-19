@@ -13,8 +13,8 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import React, { useContext, useEffect, useState } from "react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import React, { useContext } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
 import { context } from "./Context/AppContext";
 import LoginButton from "./LoginButton";
@@ -24,9 +24,8 @@ import ProfileMenu from "./ProfileMenu";
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
-  const { footerRef, userData, loginDone, loginSuccessful } =
-    useContext(context);
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { footerRef, loginDone, loginSuccessful } = useContext(context);
+  const { isAuthenticated } = useAuth0();
   return (
     <Center>
       <Flex
@@ -90,11 +89,6 @@ const Navbar = () => {
               className="robotoMono"
             >
               Explore{" "}
-              {/* {isOpen ? (
-                <ChevronUpIcon boxSize={[null, 3, 4, 5, 6, 7]} />
-              ) : (
-                <ChevronDownIcon boxSize={[null, 3, 4, 5, 6, 7]} />
-              )} */}
               <ChevronDownIcon
                 boxSize={[null, 3, 4, 5, 6, 7]}
                 transform={`rotate(${isOpen ? "180deg" : "360deg"})`}

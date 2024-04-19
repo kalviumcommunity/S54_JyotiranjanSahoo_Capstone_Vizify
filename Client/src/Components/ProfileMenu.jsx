@@ -1,7 +1,5 @@
 import {
   Button,
-  Fade,
-  Center,
   Icon,
   Menu,
   MenuButton,
@@ -10,8 +8,7 @@ import {
   useDisclosure,
   Box,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
-import { MdManageAccounts } from "react-icons/md";
+import React, { useContext } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogout2 } from "react-icons/tb";
@@ -21,7 +18,7 @@ import { deleteCookie } from "./ManageCookies";
 
 const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, logout, isLoading } = useAuth0();
+  const { user, logout } = useAuth0();
   const {
     setAllUsers,
     setLoginDone,
@@ -29,18 +26,12 @@ const ProfileMenu = () => {
     setUserData,
     setLoggedInUser,
     loggedInUser,
-    username,
   } = useContext(context);
   const navigate = useNavigate();
   return (
     <Menu isOpen={isOpen}>
       <MenuButton
         variant={"ghost"}
-        // // bgColor={"transparent"}
-        // _hover={{backgroundColor: "transparent"}}
-        w={"max-content"}
-        // bgColor={"green"}
-
         px={"0"}
         h={[null, "5vw", null, "4.4vw"]}
         color={"white"}
@@ -63,24 +54,10 @@ const ProfileMenu = () => {
             as={CgProfile}
             boxSize={7}
             color={"white"}
-            // transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
             transition={"all 0.4s"}
           />
         }
       >
-        <Center
-          transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
-          transition={"all 0.4s"}
-          variant={"link"}
-          color={"white"}
-          fontSize={`${isOpen ? "1.2vw" : "0vw"}`}
-          h={[null, "5vw", null, "3vw"]}
-          w={"fit-content"}
-        >
-          <Fade className="robotoMono" in={isOpen}>
-            {username}
-          </Fade>
-        </Center>
       </MenuButton>
       <MenuList
         my={[null, "-1vw", null, "-0.62vw"]}
@@ -105,7 +82,6 @@ const ProfileMenu = () => {
           fontWeight={"semibold"}
           className="robotoMono"
         >
-          {/* <Icon as={MdManageAccounts} boxSize={6} mr={"1vw"} /> */}
           <Box
             w={"2vw"}
             h={"2vw"}

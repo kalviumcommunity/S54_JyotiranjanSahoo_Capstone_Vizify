@@ -32,8 +32,6 @@ const AppContext = ({ children }) => {
 
     return jsonPayload;
 }
-
-console.log(username);
   useEffect(() => {
     const options = {
       method: "POST",
@@ -50,7 +48,6 @@ console.log(username);
       .request(options)
       .then(function (response) {
         setAccessToken(response.data.access_token);
-        // console.log(response.data);
       })
       .catch(function (error) {
         console.error(error);
@@ -59,7 +56,6 @@ console.log(username);
     axios
       .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
       .then((res) => {
-        console.log(res.data);
         setAllUsers(res.data);
       })
       .catch((err) => {

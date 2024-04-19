@@ -11,7 +11,6 @@ import HomeBG from "./../assets/Home_bg.jpeg";
 import AIGenImg from "./../assets/AI_Section.png";
 import TextToImg from "./../assets/textToImgHomeImg.png";
 import TextToPPT from "./../assets/textToPPTHomeImg.png";
-import { useNavigate } from "react-router-dom";
 import "./../font.css";
 import { context } from "./Context/AppContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -27,11 +26,9 @@ const Home = () => {
     setLoginDone,
     loginDone,
     accessToken,
-    isSocialLogin,
     setIsSocialLogin,
     allUsers,
     setUserId,
-    userId,
     setLoginSuccessful
   } = useContext(context);
   useEffect(() => {
@@ -59,7 +56,6 @@ const Home = () => {
   useEffect(() => {
     if (Object.keys(userData).length != 0 ) {
       setIsSocialLogin(userData.identities[0].isSocial);
-        console.log(allUsers);
         allUsers.forEach((e) => {
           if (e.Email === userData.email) {
             setLoginDone(true);
@@ -228,7 +224,6 @@ const Home = () => {
             }
             backgroundClip={"text"}
             ref={exploreRef}
-            // mb={"3vw"}
           >
             FEATURES
           </Text>
