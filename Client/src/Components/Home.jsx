@@ -1,29 +1,41 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Img,
-  Text,
-} from "@chakra-ui/react";
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { Box, Button, Center, Flex, Img, Text } from "@chakra-ui/react";
 
 import HomeBG from "./../assets/Home_bg.jpeg";
 import AIGenImg from "./../assets/AI_Section.png";
 import TextToImg from "./../assets/textToImgHomeImg.png";
 import TextToPPT from "./../assets/textToPPTHomeImg.png";
+import { useNavigate } from "react-router-dom";
 import "./../font.css";
 import { context } from "./Context/AppContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
-
-
+import PostLoginForm from "./PostLoginForm";
 const Home = () => {
   const exploreRef = useRef(null);
-  const { user, isLoading } = useAuth0();
-  const {userData, setUserData, accessToken,isSocialLogin,setIsSocialLogin} = useContext(context)
+  const { user, isLoading, isAuthenticated } = useAuth0();
+  const [showModal, setShowModal] = useState(false);
+  const {
+    userData,
+    setUserData,
+    setLoginDone,
+    loginDone,
+    accessToken,
+    isSocialLogin,
+    setIsSocialLogin,
+    allUsers,
+    setUserId,
+    userId,
+    setLoginSuccessful
+  } = useContext(context);
   useEffect(() => {
-    if (!isLoading) {
+    if (isAuthenticated) {
       if (accessToken != "") {
         const options = {
           method: "GET",
@@ -43,17 +55,34 @@ const Home = () => {
           });
       }
     }
-  }, [user]);
-  useEffect(()=>{
-    if(Object.keys(userData).length != 0 ){{
+  }, [user,isLoading,accessToken]);
+  useEffect(() => {
+    if (Object.keys(userData).length != 0 ) {
       setIsSocialLogin(userData.identities[0].isSocial);
-    }}
-  },[userData])
-
-  console.log(userData);
-
+        console.log(allUsers);
+        allUsers.forEach((e) => {
+          if (e.Email === userData.email) {
+            setLoginDone(true);
+            setLoginSuccessful(true)
+            setUserId(e._id)
+            return;
+          }else{
+            setLoginDone(true)
+          }
+        });
+    }
+  }, [userData,allUsers]);
+  useLayoutEffect(() => {
+    if (Object.keys(userData).length != 0 && !loginDone && isAuthenticated) {
+      setShowModal(true);
+    }
+    if (loginDone) {
+      setShowModal(false);
+    }
+  }, [loginDone,userData,isAuthenticated]);
   return (
     <>
+      <PostLoginForm showModal={showModal} setShowModal={setShowModal} />
       <Box w={"100%"}>
         {/* Landing Div  */}
         <Center
@@ -107,7 +136,9 @@ const Home = () => {
               onClick={() => {
                 if (exploreRef.current) {
                   const y =
-                    exploreRef.current.getBoundingClientRect().top + window.pageYOffset - 100
+                    exploreRef.current.getBoundingClientRect().top +
+                    window.pageYOffset -
+                    100;
                   window.scrollTo({ top: y, behavior: "smooth" });
                 }
               }}
@@ -116,7 +147,7 @@ const Home = () => {
             </Button>
           </Flex>
         </Center>
-  
+
         {/* AI Generation Part  */}
         <Flex
           w={"94%"}
@@ -152,21 +183,22 @@ const Home = () => {
               my={["3vw", "2vw"]}
               textAlign={["center", "left"]}
             >
-              Vizify pioneers content creation by seamlessly integrating advanced
-              Language Model (LLM) technology. Our platform empowers users to
-              effortlessly convert text into captivating visuals and dynamic
-              presentations through curated LLMs. By removing the need for users
-              to develop their own AI solutions, we democratize AI-driven
-              transformation, making creativity accessible to all.
+              Vizify pioneers content creation by seamlessly integrating
+              advanced Language Model (LLM) technology. Our platform empowers
+              users to effortlessly convert text into captivating visuals and
+              dynamic presentations through curated LLMs. By removing the need
+              for users to develop their own AI solutions, we democratize
+              AI-driven transformation, making creativity accessible to all.
               <br />
               <br />
               With carefully selected LLMs tailored to diverse content
-              transformation needs, Vizify enables users to enhance presentations
-              and craft engaging content with ease. We bridge the gap between
-              technical complexity and user-friendly interfaces, unlocking new
-              levels of expression. Our mission is to revolutionize storytelling
-              in the digital age, empowering users to communicate and express
-              their ideas with unparalleled creativity and impact.
+              transformation needs, Vizify enables users to enhance
+              presentations and craft engaging content with ease. We bridge the
+              gap between technical complexity and user-friendly interfaces,
+              unlocking new levels of expression. Our mission is to
+              revolutionize storytelling in the digital age, empowering users to
+              communicate and express their ideas with unparalleled creativity
+              and impact.
             </Text>
           </Flex>
           <Img
@@ -177,7 +209,7 @@ const Home = () => {
             display={["none", "inline"]}
           />
         </Flex>
-  
+
         {/* Feature Part  */}
         <Flex
           w={"94%"}
@@ -200,7 +232,7 @@ const Home = () => {
           >
             FEATURES
           </Text>
-  
+
           {/* Text To Image Part  */}
           <Flex
             w={"100%"}
@@ -230,14 +262,15 @@ const Home = () => {
                 my={["3vw", "2vw"]}
                 textAlign={["center", "left"]}
               >
-                Experience seamless text-to-image generation with our cutting-edge
-                Stable Diffusion Language Model (LLM) feature. Harnessing the
-                power of AI, our platform effortlessly transforms textual content
-                into captivating visuals. By leveraging Stable Diffusion LLM
-                technology, users can generate high-quality images with remarkable
-                fidelity and detail. Explore the endless possibilities of visual
-                storytelling as you bring your ideas to life in stunning imagery,
-                all with the ease and precision offered by our innovative feature.
+                Experience seamless text-to-image generation with our
+                cutting-edge Stable Diffusion Language Model (LLM) feature.
+                Harnessing the power of AI, our platform effortlessly transforms
+                textual content into captivating visuals. By leveraging Stable
+                Diffusion LLM technology, users can generate high-quality images
+                with remarkable fidelity and detail. Explore the endless
+                possibilities of visual storytelling as you bring your ideas to
+                life in stunning imagery, all with the ease and precision
+                offered by our innovative feature.
               </Text>
               <Button
                 className="astro"
@@ -270,7 +303,7 @@ const Home = () => {
               display={["none", "inline"]}
             />
           </Flex>
-  
+
           {/* Text To Presentation Part  */}
           <Flex
             w={"100%"}
@@ -311,8 +344,8 @@ const Home = () => {
                 that combines the power of Gemini Language Model (LLM) with
                 proprietary logic to offer dynamic content creation. Seamlessly
                 integrating Gemini LLM, this tool interprets user input and
-                augments it with our unique algorithms, ensuring personalized and
-                engaging presentations. By leveraging Gemini's capabilities
+                augments it with our unique algorithms, ensuring personalized
+                and engaging presentations. By leveraging Gemini's capabilities
                 alongside our custom logic, users experience unparalleled
                 text-to-presentation generation, streamlining their content
                 creation process with efficiency and creativity.

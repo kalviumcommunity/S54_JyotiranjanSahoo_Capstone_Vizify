@@ -29,7 +29,7 @@ const LoginButton = () => {
 
       onClick={()=>loginWithRedirect()}
     >
-      <Fade in={isOpen}>Login</Fade>
+      <Fade className="robotoMono" in={isOpen}>Login</Fade>
     </Button>
   );
 };

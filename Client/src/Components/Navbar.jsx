@@ -21,12 +21,12 @@ import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import ProfileMenu from "./ProfileMenu";
 
-
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
-  const { footerRef,userData } = useContext(context);
-  const { user,isAuthenticated, isLoading } = useAuth0();
+  const { footerRef, userData, loginDone, loginSuccessful } =
+    useContext(context);
+  const { user, isAuthenticated, isLoading } = useAuth0();
   return (
     <Center>
       <Flex
@@ -64,7 +64,9 @@ const Navbar = () => {
             }}
             transition={"all 0.2s"}
           >
-            <Link to={"/"}>Home</Link>
+            <Link className="robotoMono" to={"/"}>
+              Home
+            </Link>
           </Button>
           <Center>
             <Divider orientation="vertical" opacity={"0.1"} h={"2.2vw"} />
@@ -85,16 +87,22 @@ const Navbar = () => {
                 filter: "drop-shadow(0 0 0.2vw #ffffff90)",
               }}
               transition={"all 0.2s"}
+              className="robotoMono"
             >
               Explore{" "}
-              {isOpen ? (
+              {/* {isOpen ? (
                 <ChevronUpIcon boxSize={[null, 3, 4, 5, 6, 7]} />
               ) : (
                 <ChevronDownIcon boxSize={[null, 3, 4, 5, 6, 7]} />
-              )}
+              )} */}
+              <ChevronDownIcon
+                boxSize={[null, 3, 4, 5, 6, 7]}
+                transform={`rotate(${isOpen ? "180deg" : "360deg"})`}
+                transition={"all 0.3s"}
+              />
             </MenuButton>
             <MenuList
-              m={"-0.51vw"}
+              my={[null, "-1vw", null, "-0.62vw"]}
               onMouseEnter={onOpen}
               onMouseLeave={onClose}
               bgColor={"#102230e6"}
@@ -113,6 +121,7 @@ const Navbar = () => {
                 onClick={() => {
                   navigate("/texttoppt");
                 }}
+                className="robotoMono"
               >
                 Text To Presentation
               </MenuItem>
@@ -128,6 +137,7 @@ const Navbar = () => {
                 onClick={() => {
                   navigate("/texttoimg");
                 }}
+                className="robotoMono"
               >
                 Text To Image
               </MenuItem>
@@ -154,17 +164,20 @@ const Navbar = () => {
                 window.scrollTo({ top: y, behavior: "smooth" });
               }
             }}
+            className="robotoMono"
           >
             Contact Us
           </Button>
         </Flex>
-        {isLoading ? <Flex w={"33%"} justify="end"><Spinner color="white"/></Flex> :<Flex w={"33%"} justify={"end"}>
-          {isAuthenticated ? (
-            <ProfileMenu userData={userData}/>
-          ) : (
-            <LoginButton/>
-          )}
-        </Flex>}
+        {!loginDone && isAuthenticated ? (
+          <Flex w={"33%"} justify="end">
+            <Spinner color="white" />
+          </Flex>
+        ) : (
+          <Flex w={"33%"} justify={"end"}>
+            {loginSuccessful ? <ProfileMenu /> : <LoginButton />}
+          </Flex>
+        )}
       </Flex>
     </Center>
   );
