@@ -1,38 +1,41 @@
 import {
   Button,
-  Fade,
-  Center,
   Icon,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   useDisclosure,
+  Box,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
-import { MdManageAccounts } from "react-icons/md";
+import React, { useContext } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router";
 import { context } from "./Context/AppContext";
+import { deleteCookie } from "./ManageCookies";
 
-const ProfileMenu = ({ userData }) => {
+const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, logout, isLoading } = useAuth0();
-
+  const { user, logout } = useAuth0();
+  const {
+    setAllUsers,
+    setLoginDone,
+    setUserId,
+    setUserData,
+    setLoggedInUser,
+    loggedInUser,
+  } = useContext(context);
   const navigate = useNavigate();
   return (
     <Menu isOpen={isOpen}>
       <MenuButton
         variant={"ghost"}
-        bgColor={"transparent"}
-        _hover={{backgroundColor: "transparent"}}
-        w={"15vw"}
         px={"0"}
         h={[null, "5vw", null, "4.4vw"]}
         color={"white"}
-        _expanded={{ color: "#ffffffe6", backgroundColor: "transparent"}}
+        _expanded={{ color: "#ffffffe6", backgroundColor: "transparent" }}
         as={Button}
         _focus={{ boxShadow: "none" }}
         onClick={isOpen ? onClose : onOpen}
@@ -51,24 +54,13 @@ const ProfileMenu = ({ userData }) => {
             as={CgProfile}
             boxSize={7}
             color={"white"}
-            transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
             transition={"all 0.4s"}
           />
         }
       >
-        <Center
-          transform={`${isOpen ? "translateX(0vw)" : "translateX(12vw)"}`}
-          transition={"all 0.4s"}
-          variant={"link"}
-          color={"white"}
-          fontSize={"1.2vw"}
-          h={[null, "5vw", null, "3vw"]}
-        >
-          <Fade in={isOpen}>{user.name}</Fade>
-        </Center>
       </MenuButton>
       <MenuList
-        my={[null,"-1vw",null,"-0.51vw"]}
+        my={[null, "-1vw", null, "-0.62vw"]}
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
         bgColor={"#102230e6"}
@@ -88,9 +80,17 @@ const ProfileMenu = ({ userData }) => {
             navigate("/profile");
           }}
           fontWeight={"semibold"}
+          className="robotoMono"
         >
-          <Icon as={MdManageAccounts} boxSize={6} mr={"1vw"} />
-          Profile
+          <Box
+            w={"2vw"}
+            h={"2vw"}
+            borderRadius={"full"}
+            bgImage={`url(${user.picture})`}
+            bgSize={"contain"}
+            mr={"1vw"}
+          ></Box>
+          {loggedInUser.Name}
         </MenuItem>
         <MenuItem
           bgColor={"#10223000"}
@@ -102,9 +102,16 @@ const ProfileMenu = ({ userData }) => {
           fontSize={[null, "1.3vw", null, "1vw"]}
           color={"#DA3633"}
           fontWeight={"semibold"}
-          onClick={() =>
-            logout({ logoutParams: { returnTo: window.location.origin } })
-          }
+          onClick={() => {
+            logout({ logoutParams: { returnTo: window.location.origin } });
+            deleteCookie("username");
+            setUserData({});
+            setLoggedInUser({});
+            setLoginDone(false);
+            setUserId("");
+            setAllUsers([]);
+          }}
+          className="robotoMono"
         >
           <Icon as={TbLogout2} boxSize={6} mr={"1vw"} />
           LogOut
