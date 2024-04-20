@@ -12,7 +12,7 @@ export const context = createContext();
 const AppContext = ({ children }) => {
   const footerRef = useRef(null);
   const [NavDisplay, setNavDisplay] = useState(true);
-  const [loginSuccessful,setLoginSuccessful] = useState(false)
+  const [loginSuccessful, setLoginSuccessful] = useState(false);
   const [FooterDisplay, setFooterDisplay] = useState(true);
   const [isSocialLogin, setIsSocialLogin] = useState(null);
   const [userData, setUserData] = useState({});
@@ -21,17 +21,23 @@ const AppContext = ({ children }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [userId, setUserId] = useState("");
   const [loggedInUser, setLoggedInUser] = useState({});
-  const [username,setUsername] = useState('')
+  const [username, setUsername] = useState("");
 
-  function parseJwt (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+  function parseJwt(token) {
+    var base64Url = token.split(".")[1];
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    var jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
 
     return jsonPayload;
-}
+  }
   useEffect(() => {
     const options = {
       method: "POST",
@@ -52,7 +58,6 @@ const AppContext = ({ children }) => {
       .catch(function (error) {
         console.error(error);
       });
-
     axios
       .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
       .then((res) => {
@@ -63,25 +68,40 @@ const AppContext = ({ children }) => {
       });
   }, []);
   useEffect(() => {
+    if (loginSuccessful) {
+      axios
+        .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
+        .then((res) => {
+          setAllUsers(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loginSuccessful]);
+  useEffect(() => {
     if (userId != "" && loginDone) {
       axios
         .get(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}/${userId}`)
         .then((res) => {
           setLoggedInUser(res.data.User);
-          
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }, [userId]);
-  useEffect(()=>{
-    if(Object.keys(loggedInUser).length != 0){
-      setCookie("username",loggedInUser.Username,1)
-      setUsername(parseJwt(loggedInUser.Username))
+  useLayoutEffect(() => {
+    if (Object.keys(userData).length != 0) {
+      setIsSocialLogin(userData.identities[0].isSocial);
     }
-  },[loggedInUser])
-
+  }, [userData]);
+  useEffect(() => {
+    if (Object.keys(loggedInUser).length != 0) {
+      setCookie("username", loggedInUser.Username, 1);
+      setUsername(parseJwt(loggedInUser.Username));
+    }
+  }, [loggedInUser]);
 
   return (
     <context.Provider
@@ -106,7 +126,7 @@ const AppContext = ({ children }) => {
         setLoggedInUser,
         loginSuccessful,
         setLoginSuccessful,
-        username
+        username,
       }}
     >
       {children}

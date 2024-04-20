@@ -29,7 +29,9 @@ const Home = () => {
     setIsSocialLogin,
     allUsers,
     setUserId,
-    setLoginSuccessful
+    setLoginSuccessful,
+    loginSuccessful,
+    userId
   } = useContext(context);
   useEffect(() => {
     if (isAuthenticated) {
@@ -55,7 +57,6 @@ const Home = () => {
   }, [user,isLoading,accessToken]);
   useEffect(() => {
     if (Object.keys(userData).length != 0 ) {
-      setIsSocialLogin(userData.identities[0].isSocial);
         allUsers.forEach((e) => {
           if (e.Email === userData.email) {
             setLoginDone(true);
@@ -68,14 +69,23 @@ const Home = () => {
         });
     }
   }, [userData,allUsers]);
+  useEffect(()=>{
+    if(loginSuccessful){
+      allUsers.forEach((e)=>{
+        if (e.Email === userData.email) {
+          setUserId(e._id)
+        }
+      })
+    }
+  },[loginSuccessful,allUsers])
   useLayoutEffect(() => {
-    if (Object.keys(userData).length != 0 && !loginDone && isAuthenticated) {
+    if (Object.keys(userData).length != 0 && !loginSuccessful && isAuthenticated) {
       setShowModal(true);
     }
-    if (loginDone) {
+    if (loginSuccessful) {
       setShowModal(false);
     }
-  }, [loginDone,userData,isAuthenticated]);
+  }, [loginSuccessful,userData,isAuthenticated]);
   return (
     <>
       <PostLoginForm showModal={showModal} setShowModal={setShowModal} />
