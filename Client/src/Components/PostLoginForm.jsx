@@ -29,16 +29,17 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
     setFooterDisplay,
     loginDone,
     setLoginDone,
+    setLoginSuccessful,
     allUsers,
     setAllUsers,
   } = useContext(context);
   const { user, isLoading } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [input, setInput] = useState("");
-  const [error,setError] = useState("")
-  const [loading,setLoading] = useState(false)
-  const postData = ()=>{
-    setLoading(true)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const postData = () => {
+    setLoading(true);
     const userObject = {
       Name: `${isSocialLogin ? userData.name : input}`,
       Email: userData.email,
@@ -50,19 +51,25 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
       .post(import.meta.env.VITE_VIZIFY_BACKEND_USER, { ...userObject })
       .then((res) => {
         console.log(res.data);
-        setInput("")
-        setLoginDone(true)
-        setLoading(false)
-      }).catch((err)=>{
-        if(err){
-          setLoading(false)
-          setError(err.response.data.errorMessage)
+        setInput("");
+        setLoginDone(true);
+        setLoginSuccessful(true);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err) {
+          setLoading(false);
+          setError(err.response.data.errorMessage);
         }
       });
-  }
+  };
   const handleClose = (e) => {
     e.preventDefault();
-    postData()
+    if(input === ""){
+      setError("Username Can't be Empty")
+    }else{
+      postData();
+    }
   };
   useLayoutEffect(() => {
     axios
@@ -100,18 +107,17 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
           New to the Website !
         </ModalHeader>
         <ModalBody py={6} justify="center" align="center">
-          <Text color={"white"} fontSize={["2vw", "1.4vw"]}>
+          <Text color={"white"} fontSize={["4vw", "1.4vw"]}>
             {isSocialLogin
               ? "Please Provide a Username"
               : "Please Provide a Name"}
           </Text>
           <Input
-
-          onKeyDown={(e)=>{
-            if (e.key === "Enter") {
-              handleClose(e)
-            }
-          }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleClose(e);
+              }
+            }}
             type="text"
             value={input}
             onChange={(e) => {
@@ -131,19 +137,27 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
             color={"#ffffff50"}
             fontStyle={"italic"}
             w={"90%"}
-            fontSize={["0.8vw", "1vw"]}
+            fontSize={["3vw", "1vw"]}
           >
             It helps us to identify you better <br />
             (You have to give this information to proceed with the website)
           </Text>
-          {loading?<Spinner/>:error!=""&& <Text color={"#ff0000"} fontWeight={"bold"}>{error}</Text>}
+          {loading ? (
+            <Spinner color="white" my={"1vw"}/>
+          ) : (
+            error != "" && (
+              <Text color={"#ff0000"} fontWeight={"bold"}>
+                {error}
+              </Text>
+            )
+          )}
         </ModalBody>
 
         <ModalFooter m={"0 auto"}>
           <Button
             bgColor={"#01EAF980"}
             mt={["5vw", "1vw"]}
-            fontSize={["2vw", "1.4vw"]}
+            fontSize={["3.5vw", "1.4vw"]}
             color={"white"}
             w={["35vw", "12vw"]}
             h={["7vh", "7vh", "6.5vh", "8vh"]}
@@ -160,6 +174,7 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
             onClick={(e) => {
               handleClose(e);
             }}
+
           >
             Add {isSocialLogin ? "Username" : "Name"}
           </Button>

@@ -7,8 +7,10 @@ import {
   MenuList,
   useDisclosure,
   Box,
+  Skeleton,
+  Flex,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogout2 } from "react-icons/tb";
@@ -19,6 +21,7 @@ import { deleteCookie } from "./ManageCookies";
 const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, logout } = useAuth0();
+  const [displayName, setDisplayName] = useState("");
   const {
     setAllUsers,
     setLoginDone,
@@ -57,8 +60,7 @@ const ProfileMenu = () => {
             transition={"all 0.4s"}
           />
         }
-      >
-      </MenuButton>
+      ></MenuButton>
       <MenuList
         my={[null, "-1vw", null, "-0.62vw"]}
         onMouseEnter={onOpen}
@@ -67,7 +69,7 @@ const ProfileMenu = () => {
         border={"none"}
         p={"0.5vw"}
       >
-        <MenuItem
+        {loggedInUser.Name ? <MenuItem
           bgColor={"#10223000"}
           borderRadius={"0.3vw"}
           _hover={{
@@ -91,7 +93,35 @@ const ProfileMenu = () => {
             mr={"1vw"}
           ></Box>
           {loggedInUser.Name}
-        </MenuItem>
+        </MenuItem>:<MenuItem
+          bgColor={"#10223000"}
+          borderRadius={"0.3vw"}
+          _hover={{
+            backgroundColor: "#ffffff10",
+            transition: "all 0.5s",
+          }}
+          fontSize={[null, "1.3vw", null, "1vw"]}
+          color={"white"}
+          onClick={() => {
+            navigate("/profile");
+          }}
+          fontWeight={"semibold"}
+          className="robotoMono"
+        >
+          <Flex justify={"space-between"} w={"100%"}>
+            <Skeleton w={"3vw"} h={"3vw"} borderRadius={"full"} mr={"1vw"}>
+              <Box
+                w={"2vw"}
+                h={"2vw"}
+                borderRadius={"full"}
+                bgImage={`url(${user.picture})`}
+                bgSize={"contain"}
+                mr={"1vw"}
+              ></Box>
+            </Skeleton>
+              <Skeleton borderRadius={"full"} w={"100%"}>Diplay Name</Skeleton>
+          </Flex>
+        </MenuItem>}
         <MenuItem
           bgColor={"#10223000"}
           borderRadius={"0.3vw"}
