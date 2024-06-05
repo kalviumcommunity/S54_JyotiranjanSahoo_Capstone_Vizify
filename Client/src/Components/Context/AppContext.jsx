@@ -1,91 +1,132 @@
 import React, {
   createContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import axios from "axios";
 import { setCookie } from "../ManageCookies";
-import { useAuth0 } from "@auth0/auth0-react";
 
 export const context = createContext();
-
 const AppContext = ({ children }) => {
-  const { user, isLoading, isAuthenticated } = useAuth0();
   const footerRef = useRef(null);
   const [NavDisplay, setNavDisplay] = useState(true);
+  const [loginSuccessful, setLoginSuccessful] = useState(false);
   const [FooterDisplay, setFooterDisplay] = useState(true);
-  const [loginDone, setLoginDone] = useState(true);
-  const [loginSuccessfull, setLoginSuccessfull] = useState(false);
-  const [askUser, setAskUser] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState("");
+  const [isSocialLogin, setIsSocialLogin] = useState(null);
+  const [userData, setUserData] = useState({});
+  const [accessToken, setAccessToken] = useState("");
+  const [loginDone, setLoginDone] = useState(false);
+  const [allUsers, setAllUsers] = useState([]);
+  const [userId, setUserId] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState({});
+  const [username, setUsername] = useState("");
 
-  useLayoutEffect(()=>{
-    if(isAuthenticated){
-        setLoginDone(false);
-        const checkUser = async (user) =>{
-            const res = await axios.post(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}/checkbyemail`,user)
-            
-            return res.data
-        }
-        checkUser(user).then((res)=>{
-            console.log(res);
-            
-            if(!res.found){
-                if(res.isSocial){
-                    setAskUser("Username")
-                }else{
-                    setAskUser("Name")
-                }
-            }else{
-                setLoggedInUser(res.OneUser)
-                setLoginSuccessfull(true)
-                setCookie("Username",res.access_token,1)
-                setLoginDone(true)
-            }
-            
-        }).catch(err=>{
-            setLoginSuccessfull(false)
-            setLoginDone(true)
-            console.log(err);
-            
+  function parseJwt(token) {
+    var base64Url = token.split(".")[1];
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    var jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
         })
+        .join("")
+    );
+
+    return jsonPayload;
+  }
+  useEffect(() => {
+    const options = {
+      method: "POST",
+      url: `https://${import.meta.env.VITE_AUTH0_DOMAIN}/oauth/token`,
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      data: new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: import.meta.env.VITE_AUTH0_MANAGEMENT_CLIENT_ID,
+        client_secret: import.meta.env.VITE_AUTH0_MANAGEMENT_CLIENT_SECRET,
+        audience: `https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`,
+      }),
+    };
+    axios
+      .request(options)
+      .then(function (response) {
+        setAccessToken(response.data.access_token);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+    axios
+      .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
+      .then((res) => {
+        setAllUsers(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  useEffect(() => {
+    if (loginSuccessful) {
+      axios
+        .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
+        .then((res) => {
+          setAllUsers(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-},[isAuthenticated])
-
-useLayoutEffect(()=>{
-  if(isLoading){
-      setLoginDone(false)
-  }else if(!isLoading && !isAuthenticated){
-      setLoginDone(true)
-      setLoginSuccessfull(false)
-  }
-},[isLoading])
-
-useLayoutEffect(()=>{
-  if(loginSuccessfull){
-      setAskUser("")
-  }
-},[loginSuccessfull])
-console.log(loggedInUser);
-
+  }, [loginSuccessful]);
+  useEffect(() => {
+    if (userId != "" && loginDone) {
+      axios
+        .get(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}/${userId}`)
+        .then((res) => {
+          setLoggedInUser(res.data.User);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [userId]);
+  useLayoutEffect(() => {
+    if (Object.keys(userData).length != 0) {
+      setIsSocialLogin(userData.identities[0].isSocial);
+    }
+  }, [userData]);
+  useEffect(() => {
+    if (Object.keys(loggedInUser).length != 0) {
+      setCookie("username", loggedInUser.Username, 1);
+      setUsername(parseJwt(loggedInUser.Username));
+    }
+  }, [loggedInUser]);
 
   return (
     <context.Provider
       value={{
         footerRef,
+        userData,
+        setUserData,
+        accessToken,
+        isSocialLogin,
+        setIsSocialLogin,
         NavDisplay,
         setNavDisplay,
         FooterDisplay,
         setFooterDisplay,
         loginDone,
-        loginSuccessfull,
-        askUser,
-        loggedInUser,
-        setAskUser,
         setLoginDone,
-        setLoginSuccessfull,
+        allUsers,
+        setAllUsers,
+        userId,
+        setUserId,
+        loggedInUser,
         setLoggedInUser,
+        loginSuccessful,
+        setLoginSuccessful,
+        username,
       }}
     >
       {children}

@@ -1,13 +1,12 @@
 import React from 'react'
 import {Routes,Route} from "react-router-dom"
 import Home from '../Home'
-import TextToPPT from '../TextToPPT'
+import PostLoginForm from '../PostLoginForm'
 
 const AllRoutes = () => {
   return (
     <Routes>
         <Route path='/' element={<Home/>}  />
-        <Route path='/texttoppt' element={<TextToPPT/>}  />
     </Routes>
   )
 }

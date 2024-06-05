@@ -18,12 +18,14 @@ import React, { useContext } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
 import { context } from "./Context/AppContext";
 import LoginButton from "./LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
 import ProfileMenu from "./ProfileMenu";
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
-  const { loginSuccessfull, loginDone } = useContext(context);
+  const { footerRef, loginDone, loginSuccessful } = useContext(context);
+  const { isAuthenticated } = useAuth0();
   return (
     <Center>
       <Flex
@@ -161,13 +163,13 @@ const Navbar = () => {
             Contact Us
           </Button>
         </Flex>
-        {!loginDone ? (
+        {!loginDone && isAuthenticated ? (
           <Flex w={"33%"} justify="end">
             <Spinner color="white" />
           </Flex>
         ) : (
           <Flex w={"33%"} justify={"end"}>
-            {loginSuccessfull ? <ProfileMenu /> : <LoginButton />}
+            {loginSuccessful ? <ProfileMenu /> : <LoginButton />}
           </Flex>
         )}
       </Flex>

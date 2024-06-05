@@ -12,21 +12,13 @@
   "author": "S P Jyotiranjan Sahoo",
   "license": "ISC",
   "dependencies": {
-    "@langchain/google-genai": "^0.0.12",
-    "@langchain/openai": "^0.0.28",
-    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
-    "cloudinary": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "fs": "^0.0.1-security",
     "joi": "^17.12.3",
     "jsonwebtoken": "^9.0.2",
-    "langchain": "^0.1.36",
-    "mongoose": "^8.2.2",
-    "zod": "^3.23.5",
-    "zod-to-json-schema": "^3.23.0"
+    "mongoose": "^8.2.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

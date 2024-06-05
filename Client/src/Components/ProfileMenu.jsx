@@ -10,7 +10,7 @@ import {
   Skeleton,
   Flex,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogout2 } from "react-icons/tb";
@@ -21,6 +21,7 @@ import { deleteCookie } from "./ManageCookies";
 const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, logout } = useAuth0();
+  const [displayName, setDisplayName] = useState("");
   const {
     setAllUsers,
     setLoginDone,
