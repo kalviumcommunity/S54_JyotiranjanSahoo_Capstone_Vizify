@@ -9,7 +9,6 @@ import { Auth0Provider } from "@auth0/auth0-react";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ChakraProvider>
     <BrowserRouter>
-      <AppContext>
         <Auth0Provider
           domain= {import.meta.env.VITE_AUTH0_DOMAIN}
           clientId= {import.meta.env.VITE_AUTH0_CLIENT_ID}
@@ -17,9 +16,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             redirect_uri: window.location.origin,
           }}
         >
+      <AppContext>
           <App />
-        </Auth0Provider>
       </AppContext>
+        </Auth0Provider>
     </BrowserRouter>
   </ChakraProvider>
 );

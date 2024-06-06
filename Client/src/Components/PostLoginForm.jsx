@@ -17,77 +17,71 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { setCookie } from "./ManageCookies";
 
-const PostLoginForm = ({ showModal, setShowModal }) => {
+const PostLoginForm = ({ isOpen, onClose, askUser }) => {
   // console.log(showModal);
-  const {
-    userData,
-    setUserData,
-    isSocialLogin,
-    setIsSocialLogin,
-    setNavDisplay,
-    setFooterDisplay,
-    loginDone,
-    setLoginDone,
-    setLoginSuccessful,
-    allUsers,
-    setAllUsers,
-  } = useContext(context);
-  const { user, isLoading } = useAuth0();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { setLoginDone, setLoginSuccessfull, setLoggedInUser } =
+    useContext(context);
+  const { user } = useAuth0();
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const postData = () => {
-    setLoading(true);
-    const userObject = {
-      Name: `${isSocialLogin ? userData.name : input}`,
-      Email: userData.email,
-      Presentations: [],
-      Images: [],
-      Username: `${isSocialLogin ? input : userData.username}`,
-    };
-    axios
-      .post(import.meta.env.VITE_VIZIFY_BACKEND_USER, { ...userObject })
-      .then((res) => {
-        console.log(res.data);
-        setInput("");
-        setLoginDone(true);
-        setLoginSuccessful(true);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err) {
-          setLoading(false);
-          setError(err.response.data.errorMessage);
-        }
-      });
-  };
-  const handleClose = (e) => {
+  const [loading,setLoading] = useState(false)
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if(input === ""){
-      setError("Username Can't be Empty")
-    }else{
-      postData();
+    const isSocial = user?.sub?.split("|")[0] === "auth0" ? false : true;
+    const postData = { ...user };
+
+    setLoading(true)
+    if (isSocial) {
+      postData.username = input;
+      axios
+        .post("http://localhost:3000/api/userdatas/tosocial", postData)
+        .then((res) => {
+          setLoading(false)
+          setError(" ");
+          setLoggedInUser(res.data.postUser);
+          setCookie("access_token",res.data.access_token)
+          setLoginSuccessfull(true);
+          setLoginDone(true);
+          onClose()
+        })
+        .catch((err) => {
+          setLoading(false)
+          setError(err.response?.data.error);
+          setLoggedInUser({});
+          setLoginSuccessfull(false);
+          setLoginDone(true);
+        });
+    } else {
+      postData.name = input;
+      axios
+        .post("http://localhost:3000/api/userdatas", postData)
+        .then((res) => {
+          setLoading(false)
+          setError(" ");
+          setLoggedInUser(res.data.postUser);
+          setCookie("access_token",res.data.access_token)
+          setLoginSuccessfull(true);
+          setLoginDone(true);
+          onClose()
+        })
+        .catch((err) => {
+          setLoading(false)
+          console.log(err.response?.data);
+          setLoggedInUser({});
+          setLoginSuccessfull(false);
+          setLoginDone(true);
+        });
     }
+
+    // closeModal();
   };
-  useLayoutEffect(() => {
-    axios
-      .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
-      .then((res) => {
-        setAllUsers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [loginDone]);
+
+
   return (
-    <Modal
-      closeOnOverlayClick={false}
-      isOpen={showModal}
-      onClose={onClose}
-      isCentered
-    >
+    <Modal closeOnOverlayClick={false} isOpen={isOpen} isCentered>
       <ModalOverlay />
       <ModalContent
         // as={"flex"}
@@ -108,14 +102,12 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
         </ModalHeader>
         <ModalBody py={6} justify="center" align="center">
           <Text color={"white"} fontSize={["4vw", "1.4vw"]}>
-            {isSocialLogin
-              ? "Please Provide a Username"
-              : "Please Provide a Name"}
+            Please Provide a {askUser}
           </Text>
           <Input
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleClose(e);
+                handleSubmit(e);
               }
             }}
             type="text"
@@ -143,7 +135,7 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
             (You have to give this information to proceed with the website)
           </Text>
           {loading ? (
-            <Spinner color="white" my={"1vw"}/>
+            <Spinner color="white" my={"1vw"} />
           ) : (
             error != "" && (
               <Text color={"#ff0000"} fontWeight={"bold"}>
@@ -172,11 +164,10 @@ const PostLoginForm = ({ showModal, setShowModal }) => {
               transition: "transform 0.3s",
             }}
             onClick={(e) => {
-              handleClose(e);
+              handleSubmit(e);
             }}
-
           >
-            Add {isSocialLogin ? "Username" : "Name"}
+            Add {askUser}
           </Button>
         </ModalFooter>
       </ModalContent>

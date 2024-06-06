@@ -23,12 +23,10 @@ const ProfileMenu = () => {
   const { user, logout } = useAuth0();
   const [displayName, setDisplayName] = useState("");
   const {
-    setAllUsers,
     setLoginDone,
-    setUserId,
-    setUserData,
     setLoggedInUser,
     loggedInUser,
+    setLoginSuccessfull
   } = useContext(context);
   const navigate = useNavigate();
   return (
@@ -134,12 +132,10 @@ const ProfileMenu = () => {
           fontWeight={"semibold"}
           onClick={() => {
             logout({ logoutParams: { returnTo: window.location.origin } });
-            deleteCookie("username");
-            setUserData({});
+            deleteCookie("access_token");
             setLoggedInUser({});
+            setLoginSuccessfull(false)
             setLoginDone(false);
-            setUserId("");
-            setAllUsers([]);
           }}
           className="robotoMono"
         >

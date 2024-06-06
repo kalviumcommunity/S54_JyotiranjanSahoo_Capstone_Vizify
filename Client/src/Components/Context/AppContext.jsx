@@ -7,126 +7,87 @@ import React, {
 } from "react";
 import axios from "axios";
 import { setCookie } from "../ManageCookies";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const context = createContext();
 const AppContext = ({ children }) => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+
   const footerRef = useRef(null);
-  const [NavDisplay, setNavDisplay] = useState(true);
-  const [loginSuccessful, setLoginSuccessful] = useState(false);
   const [FooterDisplay, setFooterDisplay] = useState(true);
-  const [isSocialLogin, setIsSocialLogin] = useState(null);
-  const [userData, setUserData] = useState({});
-  const [accessToken, setAccessToken] = useState("");
-  const [loginDone, setLoginDone] = useState(false);
-  const [allUsers, setAllUsers] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState({});
-  const [username, setUsername] = useState("");
+  const [NavDisplay, setNavDisplay] = useState(true);
+  const [loginDone, setLoginDone] = useState(true);
+  const [loginSuccessfull, setLoginSuccessfull] = useState(false);
+  const [askUser, setAskUser] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState("");
 
-  function parseJwt(token) {
-    var base64Url = token.split(".")[1];
-    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    var jsonPayload = decodeURIComponent(
-      window
-        .atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join("")
-    );
-
-    return jsonPayload;
-  }
-  useEffect(() => {
-    const options = {
-      method: "POST",
-      url: `https://${import.meta.env.VITE_AUTH0_DOMAIN}/oauth/token`,
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: import.meta.env.VITE_AUTH0_MANAGEMENT_CLIENT_ID,
-        client_secret: import.meta.env.VITE_AUTH0_MANAGEMENT_CLIENT_SECRET,
-        audience: `https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`,
-      }),
-    };
-    axios
-      .request(options)
-      .then(function (response) {
-        setAccessToken(response.data.access_token);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-    axios
-      .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
-      .then((res) => {
-        setAllUsers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-  useEffect(() => {
-    if (loginSuccessful) {
-      axios
-        .get(import.meta.env.VITE_VIZIFY_BACKEND_USER)
-        .then((res) => {
-          setAllUsers(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [loginSuccessful]);
-  useEffect(() => {
-    if (userId != "" && loginDone) {
-      axios
-        .get(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}/${userId}`)
-        .then((res) => {
-          setLoggedInUser(res.data.User);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [userId]);
   useLayoutEffect(() => {
-    if (Object.keys(userData).length != 0) {
-      setIsSocialLogin(userData.identities[0].isSocial);
+    if (isAuthenticated) {
+      setLoginDone(false);
+      const checkUser = async (user) => {
+        const res = await axios.post(
+          "http://localhost:3000/api/userdatas/checkbyemail",
+          user
+        );
+
+        return res.data;
+      };
+      checkUser(user)
+        .then((res) => {
+          console.log(res);
+
+          if (!res.found) {
+            if (res.isSocial) {
+              setAskUser("Username");
+            } else {
+              setAskUser("Name");
+            }
+          } else {
+            setLoggedInUser(res.OneUser);
+            setCookie("access_token",res.access_token,1)
+            setLoginSuccessfull(true);
+            setLoginDone(true);
+          }
+        })
+        .catch((err) => {
+          setLoginSuccessfull(false);
+          setLoginDone(true);
+          console.log(err);
+        });
     }
-  }, [userData]);
-  useEffect(() => {
-    if (Object.keys(loggedInUser).length != 0) {
-      setCookie("username", loggedInUser.Username, 1);
-      setUsername(parseJwt(loggedInUser.Username));
+  }, [isAuthenticated]);
+
+  useLayoutEffect(() => {
+    if (isLoading) {
+      setLoginDone(false);
+    } else if (!isLoading && !isAuthenticated) {
+      setLoginDone(true);
+      setLoginSuccessfull(false);
     }
-  }, [loggedInUser]);
+  }, [isLoading]);
+
+  useLayoutEffect(() => {
+    if (loginSuccessfull) {
+      setAskUser("");
+    }
+  }, [loginSuccessfull]);
 
   return (
     <context.Provider
       value={{
         footerRef,
-        userData,
-        setUserData,
-        accessToken,
-        isSocialLogin,
-        setIsSocialLogin,
         NavDisplay,
         setNavDisplay,
         FooterDisplay,
         setFooterDisplay,
         loginDone,
-        setLoginDone,
-        allUsers,
-        setAllUsers,
-        userId,
-        setUserId,
+        loginSuccessfull,
+        askUser,
         loggedInUser,
+        setAskUser,
+        setLoginDone,
+        setLoginSuccessfull,
         setLoggedInUser,
-        loginSuccessful,
-        setLoginSuccessful,
-        username,
       }}
     >
       {children}

@@ -1,13 +1,33 @@
-const express = require("express")
-const { getAllUsers, getOneUser, createUser, updateUser, deleteUser } = require("../Controllers/UserController")
-const UserRoutes = express.Router()
+const express = require("express");
+const {
+  getAllUsers,
+  getOneUser,
+  checkPresenceByEmail,
+  AddNewUserToNonSocial,
+  AddNewUserToSocial,
+  getAllNonSocialUsers,
+  getAllSocialUsers,
+  updateUser,
+  deleteUser,
+} = require("../Controllers/UserController");
+const UserRoutes = express.Router();
 
-UserRoutes.get("/",getAllUsers)
-UserRoutes.get("/:id",getOneUser)
-UserRoutes.post("/",createUser)
-UserRoutes.patch("/:id",updateUser)
-UserRoutes.delete("/:id",deleteUser)
+UserRoutes.get('/',getAllUsers)
 
+UserRoutes.get('/social',getAllSocialUsers)
 
-module.exports = UserRoutes
+UserRoutes.get('/nonsocial',getAllNonSocialUsers)
 
+UserRoutes.get('/:id',getOneUser)
+
+UserRoutes.post('/checkbyemail',checkPresenceByEmail)
+
+UserRoutes.post('/',AddNewUserToNonSocial)
+
+UserRoutes.post('/tosocial',AddNewUserToSocial)
+
+UserRoutes.patch('/:id',updateUser)
+
+UserRoutes.delete('/:id',deleteUser)
+
+module.exports = UserRoutes;
