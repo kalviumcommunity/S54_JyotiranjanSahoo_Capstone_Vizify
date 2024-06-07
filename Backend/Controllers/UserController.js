@@ -75,7 +75,7 @@ const getOneUser = async (req, res) => {
 
 const checkPresenceByEmail = async (req, res) => {
   try {
-    if(!req.body.sub || req.body.email){
+    if(!req.body.sub || !req.body.email){
       return res.status(400).json({message: "Data Provided is not valid."})
     }
     const isSocial = req.body.sub.split("|")[0] === "auth0" ? false : true;
