@@ -21,74 +21,22 @@ const Home = () => {
   const { user, isLoading, isAuthenticated } = useAuth0();
   const [showModal, setShowModal] = useState(false);
   const {
-    userData,
-    setUserData,
-    setLoginDone,
-    loginDone,
-    accessToken,
-    setIsSocialLogin,
-    allUsers,
-    setUserId,
-    setLoginSuccessful,
-    loginSuccessful,
-    userId
+    askUser
   } = useContext(context);
+
+  const onClose = () => {
+    setShowModal(false);
+  }
+
   useEffect(() => {
-    if (isAuthenticated) {
-      if (accessToken != "") {
-        const options = {
-          method: "GET",
-          url: `https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/users`,
-          params: { q: `email:${user.email}`, search_engine: "v3" },
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        };
-        axios
-          .request(options)
-          .then((response) => {
-            setUserData(response.data[0]);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+    if(askUser.length > 0) {
+      setShowModal(true)
     }
-  }, [user,isLoading,accessToken]);
-  useEffect(() => {
-    if (Object.keys(userData).length != 0 ) {
-        allUsers.forEach((e) => {
-          if (e.Email === userData.email) {
-            setLoginDone(true);
-            setLoginSuccessful(true)
-            setUserId(e._id)
-            return;
-          }else{
-            setLoginDone(true)
-          }
-        });
-    }
-  }, [userData,allUsers]);
-  useEffect(()=>{
-    if(loginSuccessful){
-      allUsers.forEach((e)=>{
-        if (e.Email === userData.email) {
-          setUserId(e._id)
-        }
-      })
-    }
-  },[loginSuccessful,allUsers])
-  useLayoutEffect(() => {
-    if (Object.keys(userData).length != 0 && !loginSuccessful && isAuthenticated) {
-      setShowModal(true);
-    }
-    if (loginSuccessful) {
-      setShowModal(false);
-    }
-  }, [loginSuccessful,userData,isAuthenticated]);
+  },[askUser])
+
   return (
     <>
-      <PostLoginForm showModal={showModal} setShowModal={setShowModal} />
+      <PostLoginForm onClose={onClose} isOpen={showModal} askUser={askUser} />
       <Box w={"100%"}>
         {/* Landing Div  */}
         <Center

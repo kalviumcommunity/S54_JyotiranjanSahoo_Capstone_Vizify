@@ -30,14 +30,13 @@ const NavDrawer = () => {
   const btnRef = useRef();
   const {
     footerRef,
-    loginSuccessful,
+    loginSuccessfull,
     loginDone,
-    loggedInUser,
-    setUserData,
     setLoginDone,
     setLoggedInUser,
-    setAllUsers,
-    setUserId,
+    loggedInUser,
+    setLoginSuccessfull,
+    loginSuccessful
   } = useContext(context);
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
@@ -69,7 +68,7 @@ const NavDrawer = () => {
               align={"center"}
               direction={"column"}
             >
-              {!loginDone && isAuthenticated ? (
+              {!loginDone ? (
                 <>
                   <Flex
                     justify={"center"}
@@ -91,7 +90,7 @@ const NavDrawer = () => {
                     </Skeleton>
                   </Flex>
                 </>
-              ) : loginSuccessful ? (
+              ) : loginSuccessfull ? (
                 <Flex justify={"center"} align={"center"} direction={"column"}>
                   <Box
                     w={"10vh"}
@@ -198,9 +197,9 @@ const NavDrawer = () => {
               >
                 Contact Us
               </Button>
-              {!loginDone && isAuthenticated ? (
+              {!loginDone ? (
                 <Spinner color="white" />
-              ) : loginSuccessful ? (
+              ) : loginSuccessfull ? (
                 <Button
                   variant={"link"}
                   fontSize={"5vw"}
@@ -212,12 +211,10 @@ const NavDrawer = () => {
                     logout({
                       logoutParams: { returnTo: window.location.origin },
                     });
-                    deleteCookie("username");
-                    setUserData({});
+                    deleteCookie("access_token");
                     setLoggedInUser({});
+                    setLoginSuccessfull(false)
                     setLoginDone(false);
-                    setUserId("");
-                    setAllUsers([]);
                   }}
                 >
                   Logout
