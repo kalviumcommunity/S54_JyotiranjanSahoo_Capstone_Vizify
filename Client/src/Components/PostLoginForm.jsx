@@ -37,7 +37,7 @@ const PostLoginForm = ({ isOpen, onClose, askUser }) => {
     if (isSocial) {
       postData.username = input;
       axios
-        .post("http://localhost:3000/api/userdatas/tosocial", postData)
+        .post(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}/tosocial`, postData)
         .then((res) => {
           setLoading(false)
           setError(" ");
@@ -57,7 +57,7 @@ const PostLoginForm = ({ isOpen, onClose, askUser }) => {
     } else {
       postData.name = input;
       axios
-        .post("http://localhost:3000/api/userdatas", postData)
+        .post(`${import.meta.env.VITE_VIZIFY_BACKEND_USER}`, postData)
         .then((res) => {
           setLoading(false)
           setError(" ");

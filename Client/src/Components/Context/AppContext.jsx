@@ -26,7 +26,7 @@ const AppContext = ({ children }) => {
       setLoginDone(false);
       const checkUser = async (user) => {
         const res = await axios.post(
-          "http://localhost:3000/api/userdatas/checkbyemail",
+          `${import.meta.env.VITE_VIZIFY_BACKEND_USER}/checkbyemail`,
           user
         );
 
