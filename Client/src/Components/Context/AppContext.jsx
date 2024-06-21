@@ -20,6 +20,8 @@ const AppContext = ({ children }) => {
   const [loginSuccessfull, setLoginSuccessfull] = useState(false);
   const [askUser, setAskUser] = useState("");
   const [loggedInUser, setLoggedInUser] = useState("");
+  console.log(loggedInUser);
+  console.log(user);
 
   useLayoutEffect(() => {
     if (isAuthenticated) {
@@ -43,7 +45,7 @@ const AppContext = ({ children }) => {
               setAskUser("Name");
             }
           } else {
-            setLoggedInUser(res.OneUser);
+            setLoggedInUser({...res.OneUser,isSocial: res.isSocial});
             setCookie("access_token",res.access_token,1)
             setLoginSuccessfull(true);
             setLoginDone(true);

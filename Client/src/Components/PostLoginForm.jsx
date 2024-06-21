@@ -41,7 +41,7 @@ const PostLoginForm = ({ isOpen, onClose, askUser }) => {
         .then((res) => {
           setLoading(false)
           setError(" ");
-          setLoggedInUser(res.data.postUser);
+          setLoggedInUser({...res.data.postUser,isSocial});
           setCookie("access_token",res.data.access_token)
           setLoginSuccessfull(true);
           setLoginDone(true);
@@ -61,7 +61,7 @@ const PostLoginForm = ({ isOpen, onClose, askUser }) => {
         .then((res) => {
           setLoading(false)
           setError(" ");
-          setLoggedInUser(res.data.postUser);
+          setLoggedInUser({...res.data.postUser,isSocial});
           setCookie("access_token",res.data.access_token)
           setLoginSuccessfull(true);
           setLoginDone(true);

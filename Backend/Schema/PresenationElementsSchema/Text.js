@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const TextSchema = new mongoose.Schema({
+const Text = new mongoose.Schema({
   text: { type: String, required: true },
   options: {
     color: { type: String, default: "000000" },
@@ -39,4 +39,55 @@ const TextSchema = new mongoose.Schema({
   },
 });
 
+const pos_size = new mongoose.Schema({
+  w: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  },
+  h: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  },
+  x: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  },
+  y: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  }
+})
+
+const TextSchema = new mongoose.Schema({
+  type: {type: String,enum: ["text"],required: true},
+  element: {type: Text,required: true},
+  pos_size: {
+    type: pos_size,
+    required: true
+  }
+})
 module.exports = TextSchema
