@@ -8,7 +8,7 @@ Vizify is a web application that leverages AI-based generation to turn text into
 
 ## Deployed Server
 
-### [Vizify API](https://vizify-backend.vercel.app)
+### [Vizify API](https://s54-jyotiranjansahoo-capstone-vizify.onrender.com)
 
 ## Features
 
@@ -49,7 +49,7 @@ Vizify is designed with a modular and scalable architecture to ensure flexibilit
 
 ### Deployment
 
-- **Server Deployment (Vercel)**: The backend server is deployed on Vercel, providing a scalable and reliable hosting environment. Render offers simple deployment workflows, automatic scaling, and built-in SSL certificates for secure communication.
+- **Server Deployment (Render)**: The backend server is deployed on Render, providing a scalable and reliable hosting environment. Render offers simple deployment workflows, automatic scaling, and built-in SSL certificates for secure communication.
   
 - **Frontend Deployment (Netlify)**: The frontend of Vizify is deployed on Netlify, offering a seamless and efficient hosting solution for static assets. Netlify's CDN ensures fast loading times and global availability of the application.
 
