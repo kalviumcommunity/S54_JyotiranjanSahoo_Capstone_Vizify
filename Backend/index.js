@@ -3,6 +3,8 @@ const cors = require('cors')
 require('dotenv').config()
 const UserRoutes = require("./Routes/UserRoutes")
 const connect = require("./config/connect")
+const PresentationRoutes = require("./Routes/PresentationRoutes")
+const ImageRoutes = require("./Routes/ImageRoutes")
 const port = process.env.PORT || 5001
 const app = express()
 app.use(express.json())
@@ -25,7 +27,8 @@ connect().then(response=>{
 })
 
 app.use("/api/userdatas",UserRoutes)
-
+app.use("/api/presentationdatas",PresentationRoutes)
+app.use("/api/imagedatas",ImageRoutes)
 
 
 app.listen(port,()=>{

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 
-const ImageSchema = new mongoose.Schema({
+const Image = new mongoose.Schema({
     path: {type: String,required: true,match: [/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, 'Please enter a valid URL']},
     altText: String,
     flipH: Boolean,
@@ -25,6 +25,38 @@ const ImageSchema = new mongoose.Schema({
         offset: Number,
         opacity: Number,
       },
+})
+const pos_size = new mongoose.Schema({
+  x: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  },
+  y: {
+    type: String,
+    validate: {
+      validator: function(value) {
+        return /^(100|[1-9]?[0-9])%$/.test(value);
+      }
+    },
+    default: "1%",
+    required: true
+  }
+})
+
+const ImageSchema = new mongoose.Schema({
+    type: {type: String,enum: ["image"],required: true},
+    element: {type: Image,required: true},
+    pos_size: {
+        type: pos_size,
+        required: true
+      }
+
 })
 
 module.exports = ImageSchema

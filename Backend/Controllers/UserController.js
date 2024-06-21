@@ -28,8 +28,8 @@ const getAccessToken = async () => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const AllNonSocialUsers = await UserDataModel.find({});
-    const AllSocialUsers = await UserSocialDataModel.find({});
+    const AllNonSocialUsers = await UserDataModel.find({}).populate("Presentations").populate("Images");
+    const AllSocialUsers = await UserSocialDataModel.find({}).populate("Presentations").populate("Images");
     const AllUsers = [...AllNonSocialUsers, ...AllSocialUsers];
     res.status(200).json(AllUsers);
   } catch (error) {
@@ -40,7 +40,7 @@ const getAllUsers = async (req, res) => {
 
 const getAllNonSocialUsers = async (req, res) => {
   try {
-    const AllUsers = await UserDataModel.find({});
+    const AllUsers = await UserDataModel.find({}).populate("Presentations").populate("Images");
     res.status(200).json(AllUsers);
   } catch (error) {
     console.log("error", error);
@@ -50,7 +50,7 @@ const getAllNonSocialUsers = async (req, res) => {
 
 const getAllSocialUsers = async (req, res) => {
   try {
-    const AllUsers = await UserSocialDataModel.find({});
+    const AllUsers = await UserSocialDataModel.find({}).populate("Presentations").populate("Images");
     res.status(200).json(AllUsers);
   } catch (error) {
     console.log("error", error);
@@ -61,8 +61,8 @@ const getAllSocialUsers = async (req, res) => {
 const getOneUser = async (req, res) => {
   try {
     const OneUser =
-      (await UserDataModel.findById(req.params.id)) ||
-      (await UserSocialDataModel.findById(req.params.id));
+      (await UserDataModel.findById(req.params.id).populate("Presentations").populate("Images")) ||
+      (await UserSocialDataModel.findById(req.params.id).populate("Presentations").populate("Images"));
     if (!OneUser) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -75,13 +75,13 @@ const getOneUser = async (req, res) => {
 
 const checkPresenceByEmail = async (req, res) => {
   try {
-    if(!req.body.sub || req.body.email){
+    if(!req.body.sub || !req.body.email){
       return res.status(400).json({message: "Data Provided is not valid."})
     }
     const isSocial = req.body.sub.split("|")[0] === "auth0" ? false : true;
     const OneUser = isSocial
-      ? await UserSocialDataModel.find({ Email: req.body.email })
-      : await UserDataModel.find({ Email: req.body.email }).exec();
+      ? await UserSocialDataModel.find({ Email: req.body.email }).populate("Presentations").populate("Images")
+      : await UserDataModel.find({ Email: req.body.email }).populate("Presentations").populate("Images");
     if (OneUser.length == 0) {
       return res
         .status(200)
