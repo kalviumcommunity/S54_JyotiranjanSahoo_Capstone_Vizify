@@ -117,12 +117,12 @@ const createImage = async (req, res) => {
       const updatedUser =
         (await UserDataModel.findOneAndUpdate(
           { Username: username },
-          { Images: [...user.Images, postImage._id] },
+          { Images: [postImage._id,...user.Images] },
           { new: true }
         )) ||
         (await UserSocialDataModel.findOneAndUpdate(
           { Username: username },
-          { Images: [...user.Images, postImage._id] },
+          { Images: [postImage._id,...user.Images] },
           { new: true }
         ));
 

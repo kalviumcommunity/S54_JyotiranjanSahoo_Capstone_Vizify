@@ -43,21 +43,26 @@ const textSchema = z.object({
       .optional(),
     fontSize: z
       .number()
-      // .int()
+      .int()
       .gte(1)
       .lte(256)
+      .describe("Give value between 1 and 256")
       .default(11),
     charSpacing: z
       .number()
-      // .int()
+      .int()
       .gte(1)
       .lte(256)
+      .describe("Give value between 1 and 256")
       .optional(),
     lineSpacing: z
       .number()
-      // .int()
-      .gte(1)
+      .int()
+      .gte(15)
       .lte(256)
+      .describe(
+        "Give value between 15 and 256 and has to be a integer,dont give in decimal. The value will be considered as 'pt' measurement"
+      )
       .optional(),
     breakLine: z
       .boolean()
@@ -88,12 +93,14 @@ const textSchema = z.object({
           .number()
           // .int()
           .gte(0)
-          .lte(359),
+          .lte(359)
+          .describe("Give value between 0 to 359 only. Dont give value greater than 359"),
         blur: z
           .number()
           // .int()
           .gte(1)
-          .lte(256),
+          .lte(256)
+          .describe("Give value between 1 to 256 only. Dont give value greater than 256"),
         color: z
           .string()
           .regex(/^[0-9A-Fa-f]{6}$/)
@@ -101,15 +108,32 @@ const textSchema = z.object({
           .describe(
             "give a appropriate shadow color for the text, Keep it between black and white most of the time. Give it in valid hex code without #"
           ),
-        offset: z.number().int().gte(1).lte(256),
-        opacity: z.number().gte(0.0).lte(1.0),
+        offset: z
+          .number()
+          .int()
+          .gte(1)
+          .lte(256)
+          .describe("Give value between 1 to 256 only. Dont give value greater than 256"),
+        opacity: z
+          .number()
+          .gte(0.0)
+          .lte(1.0)
+          .describe("Give value between 0 to 1 in decimal only. Dont give value greater than 1"),
       })
       .describe("set shadow properties that will be added to the text.")
       .optional(),
     glow: z
       .object({
-        size: z.number().gte(1).lte(256),
-        opacity: z.number().gte(0.0).lte(1.0),
+        size: z
+          .number()
+          .gte(1)
+          .lte(256)
+          .describe("Give value between 1 and 256"),
+        opacity: z
+          .number()
+          .gte(0.0)
+          .lte(1.0)
+          .describe("Give value between 0 and 1 in decimal only"),
         color: z
           .string()
           .regex(/^[0-9A-Fa-f]{6}$/)
@@ -122,7 +146,11 @@ const textSchema = z.object({
       .optional(),
     line: z
       .object({
-        width: z.number().gte(1).lte(256),
+        width: z
+          .number()
+          .gte(1)
+          .lte(256)
+          .describe("Give value between 1 and 256"),
         color: z
           .string()
           .regex(/^[0-9A-Fa-f]{6}$/)
@@ -134,7 +162,11 @@ const textSchema = z.object({
       .optional(),
     outline: z
       .object({
-        size: z.number().gte(1).lte(256),
+        size: z
+          .number()
+          .gte(1)
+          .lte(256)
+          .describe("Give value between 1 and 256"),
         color: z
           .string()
           .regex(/^[0-9A-Fa-f]{6}$/)
@@ -416,39 +448,45 @@ const imageSchema = z.object({
       "Give description of the image, so that it can be passed to a text-to-image LLM to generate the iamge"
     ),
   altText: z.string().describe("Give a altText for the above image"),
-  style: z.enum([
-    "3d-model",
-    "analog-film",
-    "anime",
-    "cinematic",
-    "comic-book",
-    "digital-art",
-    "enhance",
-    "fantasy-art",
-    "isometric",
-    "line-art",
-    "low-poly",
-    "modeling-compound",
-    "neon-punk",
-    "origami",
-    "photographic",
-    "pixel-art",
-    "tile-texture",
-  ]).describe("Give appropriate option according to the path"),
+  style: z
+    .enum([
+      "3d-model",
+      "analog-film",
+      "anime",
+      "cinematic",
+      "comic-book",
+      "digital-art",
+      "enhance",
+      "fantasy-art",
+      "isometric",
+      "line-art",
+      "low-poly",
+      "modeling-compound",
+      "neon-punk",
+      "origami",
+      "photographic",
+      "pixel-art",
+      "tile-texture",
+    ])
+    .describe("Give appropriate option according to the path"),
   flipH: z.boolean().default(false),
   flipV: z.boolean().default(false),
-  rotate: z.number().gte(0).lte(359),
+  rotate: z.number().gte(0).lte(359).describe("Give Values between 0 and 359"),
   rounding: z.boolean().default(false),
-  transparency: z.number().gte(0).lte(100),
-  sizing: z
-    .object({
-      type: z.string(),
-      w: z.number(),
-      h: z.number(),
-      x: z.number(),
-      y: z.number(),
-    })
-    .describe("give sizing of the image"),
+  transparency: z
+    .number()
+    .gte(0)
+    .lte(100)
+    .describe("Give Values between 0 and 100"),
+  // sizing: z
+  //   .object({
+  //     type: z.string(),
+  //     w: z.number(),
+  //     h: z.number(),
+  //     x: z.number(),
+  //     y: z.number(),
+  //   })
+  //   .describe("give sizing of the image"),
   shadow: z
     .object({
       type: z.enum(["outer", "inner"]),
@@ -456,12 +494,14 @@ const imageSchema = z.object({
         .number()
         // .int()
         .gte(0)
-        .lte(359),
+        .lte(359)
+        .describe("Give Values between 0 and 359. Dont give value greater than 359"),
       blur: z
         .number()
         // .int()
         .gte(1)
-        .lte(256),
+        .lte(256)
+        .describe("Give Values between 1 and 256. Dont give value greater than 256"),
       color: z
         .string()
         .regex(/^[0-9A-Fa-f]{6}$/)
@@ -473,8 +513,13 @@ const imageSchema = z.object({
         .number()
         // .int()
         .gte(1)
-        .lte(256),
-      opacity: z.number().gte(0.0).lte(1.0),
+        .lte(256)
+        .describe("Give Values between 1 and 256. Dont give value greater than 256"),
+      opacity: z
+        .number()
+        .gte(0.0)
+        .lte(1.0)
+        .describe("Give Values between 0 and 1 in decimal only. Dont give value greater than 1"),
     })
     .describe("set shadow properties that will be added to the shape.")
     .optional(),
@@ -482,14 +527,32 @@ const imageSchema = z.object({
 const percentPattern = /^([0-9]{1,2}|100)%$/;
 const imageElementSchema = z.object({
   type: z.enum(["image"]),
-  element: imageSchema.describe("give output according to the imageScehma"),
+  element: imageSchema.describe("give output according to the imageScehma."),
 
   pos_size: z
     .object({
+      w: z
+        .string()
+        .describe(
+          "give width of the element in percentage. Accepts values between '0%' to '100%'. Give so that it will be scaled according to '1344x768'"
+        )
+        .refine((value) => percentPattern.test(value), {
+          message: "Value must be a percentage between '0%' and '100%'.",
+        })
+        .default("1%"),
+      h: z
+        .string()
+        .describe(
+          "give height of the element in percentage. Accepts values between '0%' to '100%'. Give so that it will be scaled according to '1344x768'"
+        )
+        .refine((value) => percentPattern.test(value), {
+          message: "Value must be a percentage between '0%' and '100%'",
+        })
+        .default("1%"),
       x: z
         .string()
         .describe(
-          "give horizontal location of the element in percentage. Accepts values between '0%' to '100%'"
+          "give horizontal location of the element in percentage. Accepts values between '0%' to '100%'. Give such that it will not overlap any other element"
         )
         .refine((value) => percentPattern.test(value), {
           message: "Value must be a percentage between '0%' and '100%'",
@@ -499,20 +562,22 @@ const imageElementSchema = z.object({
       y: z
         .string()
         .describe(
-          "give vertical location of the element in percentage. Accepts values between '0%' to '100%'"
+          "give vertical location of the element in percentage. Accepts values between '0%' to '100%'. Give such that it will not overlap any other element"
         )
         .refine((value) => percentPattern.test(value), {
           message: "Value must be a percentage between '0%' and '100%'",
         })
         .default("1%"),
     })
-    .describe("It is mandatory for each element")
+    .describe(
+      "It is mandatory for each element. Give pos_size such that it will not overlap any other elements"
+    )
     .required(),
 });
 
 const textElementSchema = z.object({
   type: z.enum(["text"]),
-  element: textSchema.describe("give output according to the textScehma"),
+  element: textSchema.describe("give output according to the textScehma."),
 
   pos_size: z
     .object({
@@ -554,10 +619,11 @@ const textElementSchema = z.object({
         })
         .default("1%"),
     })
-    .describe("It is mandatory for each element")
+    .describe(
+      "It is mandatory for each element. give such that it will take only half of the space in presentation and give space for image to place"
+    )
     .required(),
 });
-
 
 // Maybe added in Future
 const shapeElementSchema = z.object({
@@ -607,8 +673,6 @@ const shapeElementSchema = z.object({
     .describe("It is mandatory for each element")
     .required(),
 });
-
-
 
 const slideElementSchema = z.object({
   type: z.enum(["text", "image"]),
@@ -671,7 +735,8 @@ const backgroundSchema = z
           .describe(
             "give a good description to use it as a prompt to generate image for the background of the slide."
           ),
-          style: z.enum([
+        style: z
+          .enum([
             "3d-model",
             "analog-film",
             "anime",
@@ -689,7 +754,8 @@ const backgroundSchema = z
             "photographic",
             "pixel-art",
             "tile-texture",
-          ]).describe("Give appropriate option according to the image")
+          ])
+          .describe("Give appropriate option according to the image"),
       })
       .describe("define the background image as prompt."),
   ])

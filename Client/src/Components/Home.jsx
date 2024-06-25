@@ -16,9 +16,10 @@ import { context } from "./Context/AppContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import PostLoginForm from "./PostLoginForm";
+import { useNavigate } from "react-router";
 const Home = () => {
   const exploreRef = useRef(null);
-  const { user, isLoading, isAuthenticated } = useAuth0();
+  const navigate = useNavigate(null)
   const [showModal, setShowModal] = useState(false);
   const {
     askUser
@@ -244,6 +245,7 @@ const Home = () => {
                   transform: "scale(1.01)",
                   transition: "transform 0.3s",
                 }}
+                onClick={()=>navigate("/text-to-img")}
               >
                 Try now
               </Button>
@@ -322,6 +324,7 @@ const Home = () => {
                   transform: "scale(1.01)",
                   transition: "transform 0.3s",
                 }}
+                onClick={()=>navigate("/text-to-ppt")}
               >
                 Try now
               </Button>

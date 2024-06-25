@@ -354,7 +354,7 @@ const getTextElements = async (topic, model, no_of_texts) => {
     const text_prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        `You are a creative Presentation content maker. Give array containing {no_of_texts} objects with text, position and size of the text element to be used in presentation, and the topic will be given by the user. Give the response in {text_format}`,
+        `You are a creative Presentation content maker. Give array containing {no_of_texts} objects with text, position and size of the text element to be used in presentation, and the topic will be given by the user,Give color property for a funky background, give pos_size such that it will not overlap with any other element or dont go outside the size of presentation. and keep the elements at left of the presentation. Give the response in {text_format}`,
       ],
       ["human", `{topic}`],
     ]);
@@ -392,7 +392,7 @@ const getImageElement = async (topic, model, pos_size) => {
     const image_prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        `You are a creative Presentation content maker. Give a objects with image details, position and size of the image element to be used in presentation, and the topic will be given by the user. Givee values in pos_size that will look good with text elements at {pos_size} pos_size .Give the response in {image_format}`,
+        `You are a creative Presentation content maker. Give a objects with image details, position and size of the image element to be used in presentation, and the topic will be given by the user. Givee values in pos_size that will look good and not overlap with text elements at {pos_size}, keep keep the element at right of the presentation .Give the response in {image_format}`,
       ],
       ["human", `{topic}`],
     ]);

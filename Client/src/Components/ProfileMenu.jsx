@@ -17,11 +17,12 @@ import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router";
 import { context } from "./Context/AppContext";
 import { deleteCookie } from "./ManageCookies";
+import AccountModal from "./AccountModal";
 
 const ProfileMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, logout } = useAuth0();
-  const [displayName, setDisplayName] = useState("");
+  const [showAccountModal,setShowAccountModal] = useState(false)
   const {
     setLoginDone,
     setLoggedInUser,
@@ -31,6 +32,7 @@ const ProfileMenu = () => {
   const navigate = useNavigate();
   return (
     <Menu isOpen={isOpen}>
+            <AccountModal isOpen={showAccountModal} toggleShowModal={setShowAccountModal}/>
       <MenuButton
         variant={"ghost"}
         px={"0"}
@@ -77,7 +79,8 @@ const ProfileMenu = () => {
           fontSize={[null, "1.3vw", null, "1vw"]}
           color={"white"}
           onClick={() => {
-            navigate("/profile");
+            // navigate("/profile");
+            setShowAccountModal(true)
           }}
           fontWeight={"semibold"}
           className="robotoMono"
@@ -101,7 +104,8 @@ const ProfileMenu = () => {
           fontSize={[null, "1.3vw", null, "1vw"]}
           color={"white"}
           onClick={() => {
-            navigate("/profile");
+            // navigate("/profile");
+            setShowAccountModal(true)
           }}
           fontWeight={"semibold"}
           className="robotoMono"

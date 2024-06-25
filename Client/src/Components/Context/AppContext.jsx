@@ -19,9 +19,8 @@ const AppContext = ({ children }) => {
   const [loginDone, setLoginDone] = useState(true);
   const [loginSuccessfull, setLoginSuccessfull] = useState(false);
   const [askUser, setAskUser] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState("");
-  console.log(loggedInUser);
-  console.log(user);
+  const [loggedInUser, setLoggedInUser] = useState({});
+
 
   useLayoutEffect(() => {
     if (isAuthenticated) {
@@ -36,7 +35,6 @@ const AppContext = ({ children }) => {
       };
       checkUser(user)
         .then((res) => {
-          console.log(res);
 
           if (!res.found) {
             if (res.isSocial) {

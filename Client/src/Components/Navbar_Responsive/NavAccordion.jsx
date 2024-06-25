@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   Accordion,
   AccordionButton,
@@ -7,10 +8,14 @@ import {
   Button,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { context } from "../Context/AppContext";
 
-const NavAccordion = () => {
+const NavAccordion = ({onClose}) => {
+  const { loginWithRedirect } = useAuth0();
+  const { loginSuccessfull } = useContext(context);
+  const navigate = useNavigate(null)
   return (
     <Accordion allowToggle>
       <AccordionItem border={"none"}>
@@ -27,10 +32,40 @@ const NavAccordion = () => {
           <AccordionIcon mt={"1vw"} mx={"2vw"} />
         </AccordionButton>
         <AccordionPanel>
-              <VStack align={"start"}>
-                  <Link className="robotoMono" to={"/texttoppt"}><Button variant={'link'} color={'white'} borderRadius={'none'}>Text to Presentation</Button></Link>
-                  <Link className="robotoMono" to={"/texttoimg"}><Button variant={'link'} color={'white'} borderRadius={'none'}>Text to Image</Button></Link>
-              </VStack>
+          <VStack align={"start"}>
+            <Button
+              variant={"link"}
+              onClick={() => {
+                if (loginSuccessfull) {
+                  navigate("/text-to-ppt");
+                } else {
+                  loginWithRedirect();
+                }
+                onClose()
+              }}
+              className="robotoMono"
+              color={"white"}
+              borderRadius={"none"}
+            >
+              Text to Presentation
+            </Button>
+            <Button
+              variant={"link"}
+              onClick={() => {
+                if (loginSuccessfull) {
+                  navigate("/text-to-img");
+                } else {
+                  loginWithRedirect();
+                }
+                onClose()
+              }}
+              className="robotoMono"
+              color={"white"}
+              borderRadius={"none"}
+            >
+              Text to Image
+            </Button>
+          </VStack>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
