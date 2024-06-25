@@ -16,7 +16,7 @@ import {
   Center,
   Text,
 } from "@chakra-ui/react";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import NavAccordion from "./NavAccordion";
@@ -24,9 +24,11 @@ import { context } from "../Context/AppContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TbLogin2, TbLogout2 } from "react-icons/tb";
 import { deleteCookie } from "../ManageCookies";
+import AccountModal from "../AccountModal";
 
 const NavDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [showAccountModal, setShowAccountModal] = useState(false);
   const btnRef = useRef();
   const {
     footerRef,
@@ -36,12 +38,16 @@ const NavDrawer = () => {
     setLoggedInUser,
     loggedInUser,
     setLoginSuccessfull,
-    loginSuccessful
+    loginSuccessful,
   } = useContext(context);
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
     <>
+      {loginSuccessfull && <AccountModal
+        isOpen={showAccountModal}
+        toggleShowModal={setShowAccountModal}
+      />}
       <Button ref={btnRef} color="white" onClick={onOpen} variant={"link"}>
         <HamburgerIcon boxSize={7} />
       </Button>
@@ -98,14 +104,21 @@ const NavDrawer = () => {
                     borderRadius={"full"}
                     bgImage={`url(${user.picture})`}
                     bgSize={"contain"}
-                  >
-                  </Box>
+                    onClick={() => {
+                      setShowAccountModal(true)
+                      onClose()
+                    }}
+                  ></Box>
                   {loggedInUser.Name ? (
                     <Text
                       color={"white"}
                       fontSize={"4vw"}
                       my={"1vh"}
                       className="robotoMono"
+                      onClick={() => {
+                        setShowAccountModal(true);
+                        onClose()
+                      }}
                     >
                       {loggedInUser.Name}
                     </Text>
@@ -124,6 +137,10 @@ const NavDrawer = () => {
                       opacity={"0.7"}
                       fontStyle={"italic"}
                       className="robotoMono"
+                      onClick={() => {
+                        setShowAccountModal(true);
+                        onClose()
+                      }}
                     >
                       {loggedInUser.Email}
                     </Text>
@@ -173,7 +190,7 @@ const NavDrawer = () => {
                   Home
                 </Link>
               </Button>
-              <NavAccordion />
+              <NavAccordion onClose={onClose} />
               <Button
                 variant={"link"}
                 fontSize={"5vw"}
@@ -213,7 +230,7 @@ const NavDrawer = () => {
                     });
                     deleteCookie("access_token");
                     setLoggedInUser({});
-                    setLoginSuccessfull(false)
+                    setLoginSuccessfull(false);
                     setLoginDone(false);
                   }}
                 >

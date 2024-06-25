@@ -137,12 +137,12 @@ const createPresentation = async (req, res) => {
         const updatedUser =
           (await UserDataModel.findOneAndUpdate(
             { Username: username },
-            { Presentations: [...user.Presentations, postPPT._id] },
+            { Presentations: [postPPT._id,...user.Presentations] },
             { new: true }
           )) ||
           (await UserSocialDataModel.findOneAndUpdate(
             { Username: username },
-            { Presentations: [...user.Presentations, postPPT._id] },
+            { Presentations: [postPPT._id,...user.Presentations] },
             { new: true }
           ));
 

@@ -14,13 +14,16 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Logo from "./../assets/Vizify_Logo.png";
 import { context } from "./Context/AppContext";
 import LoginButton from "./LoginButton";
 import ProfileMenu from "./ProfileMenu";
+import { useAuth0 } from "@auth0/auth0-react";
+import AccountModal from "./AccountModal";
 
 const Navbar = () => {
+  const { loginWithRedirect } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate(null);
   const { footerRef, loginSuccessfull, loginDone } = useContext(context);
@@ -111,7 +114,11 @@ const Navbar = () => {
                 fontSize={[null, "1.3vw", null, "1vw"]}
                 color={"white"}
                 onClick={() => {
-                  navigate("/texttoppt");
+                  if(loginSuccessfull){
+                    navigate("/text-to-ppt");
+                  }else{
+                    loginWithRedirect()
+                  }
                 }}
                 className="robotoMono"
               >
@@ -127,7 +134,11 @@ const Navbar = () => {
                 fontSize={[null, "1.3vw", null, "1vw"]}
                 color={"white"}
                 onClick={() => {
-                  navigate("/texttoimg");
+                  if(loginSuccessfull){
+                    navigate("/text-to-img");
+                  }else{
+                    loginWithRedirect()
+                  }
                 }}
                 className="robotoMono"
               >
